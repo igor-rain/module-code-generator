@@ -1,0 +1,24 @@
+{
+    "name": "igor-rain/module-code-generator",
+    "description": "Magento Code Generator",
+    "require": {
+        "php": "~7.1.3||~7.2.0||~7.3.0",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "magento/framework": "^102",
+        "nikic/php-parser": "^4"
+    },
+    "type": "magento2-module",
+    "license": [
+        "MIT"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "IgorRain\\CodeGenerator\\": ""
+        }
+    },
+    "version": "0.0.1"
+}

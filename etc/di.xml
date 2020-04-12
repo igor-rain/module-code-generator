@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Igor Rain <igor.rain@icloud.com>
+ * See LICENCE for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="devMakeModule" xsi:type="object">IgorRain\CodeGenerator\Command\Make\Module</item>
+                <item name="devMakeModel" xsi:type="object">IgorRain\CodeGenerator\Command\Make\Model</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="IgorRain\CodeGenerator\Model\ResourceModel\Source\SourceFactory">
+        <arguments>
+            <argument name="sources" xsi:type="array">
+                <item name="xml" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\XmlSource</item>
+                <item name="json" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\JsonSource</item>
+                <item name="text" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\TextSource</item>
+                <item name="php" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\PhpSource</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
