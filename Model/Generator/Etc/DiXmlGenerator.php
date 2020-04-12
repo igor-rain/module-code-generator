@@ -7,6 +7,7 @@
 namespace IgorRain\CodeGenerator\Model\Generator\Etc;
 
 use DOMElement;
+use IgorRain\CodeGenerator\Model\Context\ModelContext;
 use IgorRain\CodeGenerator\Model\ResourceModel\Source\SourceFactory;
 use IgorRain\CodeGenerator\Model\ResourceModel\Source\XmlSource;
 
@@ -20,6 +21,13 @@ class DiXmlGenerator extends AbstractXmlGenerator
     public function __construct(SourceFactory $sourceFactory)
     {
         $this->sourceFactory = $sourceFactory;
+    }
+
+    public function generateModulePreferences(string $fileName, ModelContext $context): void
+    {
+        $this->generatePreference($fileName, $context->getModelInterface()->getName(), $context->getModel()->getName());
+        $this->generatePreference($fileName, $context->getRepositoryInterface()->getName(), $context->getRepository()->getName());
+        $this->generatePreference($fileName, $context->getSearchResultsInterface()->getName(), $context->getSearchResults()->getName());
     }
 
     public function generatePreference(string $fileName, string $for, string $type): void
@@ -62,7 +70,7 @@ class DiXmlGenerator extends AbstractXmlGenerator
 
     protected function getEmptyTemplate(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd"></config>';
     }
 }

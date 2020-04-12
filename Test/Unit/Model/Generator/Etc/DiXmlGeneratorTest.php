@@ -19,6 +19,35 @@ use PHPUnit\Framework\TestCase;
  */
 class DiXmlGeneratorTest extends TestCase
 {
+    public function testGenerateModulePreferences(): void
+    {
+        $fileName = '/tmp/filename';
+        $context = ModelContextTest::createContext();
+
+        /** @var DiXmlGenerator|MockObject $generator */
+        $generator = $this->createPartialMock(DiXmlGenerator::class, [
+            'generatePreference'
+        ]);
+
+        $generator->expects($this->exactly(3))
+            ->method('generatePreference')
+            ->withConsecutive([
+                $fileName,
+                'Vendor1\Module1Api\Api\Data\Menu\ItemInterface',
+                'Vendor1\Module1\Model\Menu\Item'
+            ], [
+                $fileName,
+                'Vendor1\Module1Api\Api\Menu\ItemRepositoryInterface',
+                'Vendor1\Module1\Model\Menu\ItemRepository'
+            ], [
+                $fileName,
+                'Vendor1\Module1Api\Api\Data\Menu\ItemSearchResultsInterface',
+                'Vendor1\Module1\Model\Menu\ItemSearchResults'
+            ]);
+
+        $generator->generateModulePreferences($fileName, $context);
+    }
+
     public function testGeneratePreferenceForNewFile(): void
     {
         $fileName = $this->getTmpFileName();
@@ -75,7 +104,7 @@ class DiXmlGeneratorTest extends TestCase
 
     protected function getExpectedNewContent(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Vendor1\Module1Api\Api\Menu\ItemRepositoryInterface" type="Vendor1\Module1\Model\Menu\ItemRepository"/>
 </config>
@@ -84,7 +113,7 @@ class DiXmlGeneratorTest extends TestCase
 
     protected function getExistingContent(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Vendor1\Module1Api\Api\Data\Menu\ItemInterface" type="Vendor1\Module1\Model\Menu\Item"/>
     <preference for="Vendor1\Module1Api\Api\Menu\ItemRepositoryInterface" type="Vendor1\Module1\Model\NotExistingClass"/>
@@ -94,7 +123,7 @@ class DiXmlGeneratorTest extends TestCase
 
     protected function getExpectedExistingContent(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Vendor1\Module1Api\Api\Data\Menu\ItemInterface" type="Vendor1\Module1\Model\Menu\Item"/>
     <preference for="Vendor1\Module1Api\Api\Menu\ItemRepositoryInterface" type="Vendor1\Module1\Model\Menu\ItemRepository"/>

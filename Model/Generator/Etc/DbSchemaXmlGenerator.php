@@ -146,7 +146,7 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
 
     protected function getEmptyTemplate(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd"></schema>';
     }
 }

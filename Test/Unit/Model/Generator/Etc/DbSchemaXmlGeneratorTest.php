@@ -75,7 +75,7 @@ class DbSchemaXmlGeneratorTest extends TestCase
 
     protected function getExpectedNewContent(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="menu_item_entity" resource="default" engine="innodb" comment="Menu Item Table">
         <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
@@ -93,7 +93,7 @@ class DbSchemaXmlGeneratorTest extends TestCase
 
     protected function getExistingContent(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="menu_item_entity" resource="default" engine="innodb" comment="Menu Item Table">
         <column xsi:type="varchar" name="sku"/>
@@ -109,7 +109,7 @@ class DbSchemaXmlGeneratorTest extends TestCase
 
     protected function getExpectedExistingContent(): string
     {
-        return '<?xml version="1.0" encoding="UTF-8"?>
+        return '<?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="menu_item_entity" resource="default" engine="innodb" comment="Menu Item Table">
         <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>

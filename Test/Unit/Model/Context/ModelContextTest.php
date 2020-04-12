@@ -169,6 +169,11 @@ class ModelContextTest extends TestCase
         $this->assertEquals('menu_item', self::createContext()->getEventObjectName());
     }
 
+    public function testGetAclResourceName(): void
+    {
+        $this->assertEquals('Vendor1_Module1::menu_item', self::createContext()->getAclResourceName());
+    }
+
     public function testGetModelInterface(): void
     {
         $this->assertEquals('Vendor1\\Module1Api\\Api\\Data\\Menu\\ItemInterface', self::createContext()->getModelInterface()->getName());

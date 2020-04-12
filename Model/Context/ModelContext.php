@@ -138,6 +138,11 @@ class ModelContext
         return strtolower(str_replace(['\\', '/'], '', preg_replace('/(?<!^)[A-Z]/', '_$0', $this->relativeClassName)));
     }
 
+    public function getAclResourceName(): string
+    {
+        return $this->module->getName() . '::' . $this->getEventObjectName();
+    }
+
     public function getModelInterface(): ClassContext
     {
         return $this->getClassContext($this->apiModule, 'Api\\Data\\'

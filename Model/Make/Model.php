@@ -10,8 +10,10 @@ use IgorRain\CodeGenerator\Model\Context\ModelContext;
 use IgorRain\CodeGenerator\Model\Generator\Api\ModelInterfaceGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Api\RepositoryInterfaceGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Api\SearchResultsInterfaceGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Etc\AclXmlGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Etc\DbSchemaXmlGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Etc\DiXmlGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Etc\WebapiXmlGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Model\CollectionGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Model\ModelGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Model\RepositoryGenerator;
@@ -90,6 +92,14 @@ class Model
      * @var RepositoryApiFunctionalTestGenerator
      */
     private $repositoryApiFunctionalTestGenerator;
+    /**
+     * @var AclXmlGenerator
+     */
+    private $aclXmlGenerator;
+    /**
+     * @var WebapiXmlGenerator
+     */
+    private $webapiXmlGenerator;
 
     public function __construct(
         ModelInterfaceGenerator $modelInterfaceGenerator,
@@ -107,7 +117,9 @@ class Model
         RepositoryIntegrationTestGenerator $repositoryIntegrationTestGenerator,
         ModelIntegrationTestFixtureGenerator $modelIntegrationTestFixtureGenerator,
         ModelRollbackIntegrationTestFixtureGenerator $modelRollbackIntegrationTestFixtureGenerator,
-        RepositoryApiFunctionalTestGenerator $repositoryApiFunctionalTestGenerator
+        RepositoryApiFunctionalTestGenerator $repositoryApiFunctionalTestGenerator,
+        AclXmlGenerator $aclXmlGenerator,
+        WebapiXmlGenerator $webapiXmlGenerator
     ) {
         $this->modelInterfaceGenerator = $modelInterfaceGenerator;
         $this->searchResultsInterfaceGenerator = $searchResultsInterfaceGenerator;
@@ -125,6 +137,8 @@ class Model
         $this->modelIntegrationTestFixtureGenerator = $modelIntegrationTestFixtureGenerator;
         $this->modelRollbackIntegrationTestFixtureGenerator = $modelRollbackIntegrationTestFixtureGenerator;
         $this->repositoryApiFunctionalTestGenerator = $repositoryApiFunctionalTestGenerator;
+        $this->aclXmlGenerator = $aclXmlGenerator;
+        $this->webapiXmlGenerator = $webapiXmlGenerator;
     }
 
     /**
@@ -157,12 +171,10 @@ class Model
         $this->searchResultsClassGenerator->generate($searchResultsClassFilePath, $context);
 
         $diXmlFilePath = $context->getModule()->getPath() . '/etc/di.xml';
-        $this->diXmlGenerator->generatePreference($diXmlFilePath, $context->getModelInterface()->getName(), $context->getModel()->getName());
-        $this->diXmlGenerator->generatePreference($diXmlFilePath, $context->getRepositoryInterface()->getName(), $context->getRepository()->getName());
-        $this->diXmlGenerator->generatePreference($diXmlFilePath, $context->getSearchResultsInterface()->getName(), $context->getSearchResults()->getName());
+        $this->diXmlGenerator->generateModulePreferences($diXmlFilePath, $context);
 
-        $dbSchemaXmlFileMath = $context->getModule()->getPath() . '/etc/db_schema.xml';
-        $this->dbSchemaXmlGenerator->generateTable($dbSchemaXmlFileMath, $context);
+        $dbSchemaXmlFilePath = $context->getModule()->getPath() . '/etc/db_schema.xml';
+        $this->dbSchemaXmlGenerator->generateTable($dbSchemaXmlFilePath, $context);
 
         $repositoryUnitTestFilePath = $context->getRepository()->getUnitTest()->getAbsoluteFilePath();
         $this->repositoryUnitTestGenerator->generate($repositoryUnitTestFilePath, $context);
@@ -181,5 +193,11 @@ class Model
 
         $repositoryApiFunctionalTestFilePath = $context->getRepository()->getApiFunctionalTest()->getAbsoluteFilePath();
         $this->repositoryApiFunctionalTestGenerator->generate($repositoryApiFunctionalTestFilePath, $context);
+
+        $alcXmlFilePath = $context->getModule()->getPath() . '/etc/acl.xml';
+        $this->aclXmlGenerator->generateModelResource($alcXmlFilePath, $context);
+
+        $webapiXmlFilePath = $context->getModule()->getPath() . '/etc/webapi.xml';
+        $this->webapiXmlGenerator->generateModelRoutes($webapiXmlFilePath, $context);
     }
 }
