@@ -41,18 +41,12 @@ class ModuleContext
         $this->path = $path;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -60,7 +54,7 @@ class ModuleContext
     /**
      * @return ModuleContext[]
      */
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return $this->dependencies;
     }
@@ -68,47 +62,32 @@ class ModuleContext
     /**
      * @param ModuleContext[] $dependencies
      */
-    public function setDependencies($dependencies)
+    public function setDependencies(array $dependencies): void
     {
         $this->dependencies = $dependencies;
     }
 
-    /**
-     * @return string
-     */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
 
-    /**
-     * @param string $version
-     */
-    public function setVersion($version)
+    public function setVersion(string $version): void
     {
         $this->version = $version;
     }
 
-    /**
-     * @return string
-     */
-    public function getComposerPackage()
+    public function getComposerPackage(): string
     {
         return strtolower(str_replace('_', '/module', preg_replace('/(?<!^)[A-Z]/', '-$0', $this->name)));
     }
 
-    /**
-     * @return string
-     */
-    public function getPsr4Prefix()
+    public function getPsr4Prefix(): string
     {
         return str_replace('_', '\\', $this->name) . '\\';
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'Magento module responsible for ' . str_replace('_', '', preg_replace('/(?<!^)[A-Z]/', ' $0', $this->name));
     }

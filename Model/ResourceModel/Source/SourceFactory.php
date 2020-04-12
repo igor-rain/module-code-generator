@@ -27,13 +27,7 @@ class SourceFactory
         $this->sources = $sources;
     }
 
-    /**
-     * @param string $fileName
-     * @param string $sourceType
-     *
-     * @return SourceInterface
-     */
-    public function create($fileName, $sourceType): SourceInterface
+    public function create(string $fileName, string $sourceType): SourceInterface
     {
         if (!isset($this->sources[$sourceType])) {
             throw new \RuntimeException(sprintf('Invalid source type %s', $sourceType));

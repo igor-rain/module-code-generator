@@ -22,7 +22,7 @@ class RegistrationPhpGenerator
         $this->sourceFactory = $sourceFactory;
     }
 
-    public function generate($fileName, ModuleContext $context)
+    public function generate($fileName, ModuleContext $context): void
     {
         /** @var TextSource $source */
         $source = $this->sourceFactory->create($fileName, 'text');
@@ -30,7 +30,7 @@ class RegistrationPhpGenerator
         $source->save();
     }
 
-    protected function prepareData(ModuleContext $context)
+    protected function prepareData(ModuleContext $context): string
     {
         return '<?php
 

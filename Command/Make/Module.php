@@ -17,13 +17,12 @@ class Module extends Command
 {
     public const NAME = 'dev:make:module';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(self::NAME)
             ->setDescription(
                 'Generate module'
             );
-        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

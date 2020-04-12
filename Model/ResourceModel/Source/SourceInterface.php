@@ -8,7 +8,9 @@ namespace IgorRain\CodeGenerator\Model\ResourceModel\Source;
 
 interface SourceInterface
 {
-    public function load();
+    public function exists(): bool;
 
-    public function save();
+    public function load(): void;
+
+    public function save(): void;
 }

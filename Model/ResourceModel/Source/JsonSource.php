@@ -23,6 +23,11 @@ class JsonSource implements SourceInterface
         $this->fileName = $fileName;
     }
 
+    public function exists(): bool
+    {
+        return file_exists($this->fileName);
+    }
+
     public function load(): void
     {
         if (!file_exists($this->fileName)) {

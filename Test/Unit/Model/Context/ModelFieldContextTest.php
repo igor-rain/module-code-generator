@@ -73,12 +73,7 @@ class ModelFieldContextTest extends TestCase
         $this->assertEquals('Attribute Set ID', self::createContext()->getDescriptionInTable());
     }
 
-    /**
-     * @param string $name
-     *
-     * @return ModelFieldContext
-     */
-    public static function createContext($name = self::FIELD_NAME)
+    public static function createContext(string $name = self::FIELD_NAME): ModelFieldContext
     {
         return new ModelFieldContext($name);
     }

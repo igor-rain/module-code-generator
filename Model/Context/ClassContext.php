@@ -33,7 +33,7 @@ class ClassContext
         return $this->className;
     }
 
-    public function getShortName()
+    public function getShortName(): string
     {
         $parts = explode('\\', $this->className);
 

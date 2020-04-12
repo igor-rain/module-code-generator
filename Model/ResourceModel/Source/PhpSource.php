@@ -26,7 +26,12 @@ class PhpSource implements SourceInterface
         $this->fileName = $fileName;
     }
 
-    public function load()
+    public function exists(): bool
+    {
+        return file_exists($this->fileName);
+    }
+
+    public function load(): void
     {
         if (!file_exists($this->fileName)) {
             throw new \RuntimeException(sprintf('Missing file %s', $this->fileName));
@@ -37,7 +42,7 @@ class PhpSource implements SourceInterface
         $this->stmts = $parser->parse($content);
     }
 
-    public function save()
+    public function save(): void
     {
         $dir = dirname($this->fileName);
         if (!is_dir($dir) && !mkdir($dir, 0770, true) && !is_dir($dir)) {
@@ -52,7 +57,7 @@ class PhpSource implements SourceInterface
     /**
      * @return Node[]
      */
-    public function getStmts()
+    public function getStmts(): array
     {
         return $this->stmts;
     }
@@ -60,7 +65,7 @@ class PhpSource implements SourceInterface
     /**
      * @param Node[] $stmts
      */
-    public function setStmts($stmts)
+    public function setStmts(array $stmts): void
     {
         $this->stmts = $stmts;
     }

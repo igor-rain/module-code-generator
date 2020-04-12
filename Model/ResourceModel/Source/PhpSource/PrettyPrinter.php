@@ -15,7 +15,7 @@ class PrettyPrinter extends Standard
         $result = parent::prettyPrintFile($stmts);
 
         $result = str_replace([') : ', "<?php\n\n"], ['): ', "<?php\n"], $result);
-        $result = preg_replace('!([ ]+[a-z0-9\}]+[^\n]*\n)([ ]+[/a-z0-9]+)!i', "\$1\n\$2", $result);
+        $result = preg_replace('!([ ]+[a-z0-9}]+[^\n]*\n)([ ]+[/a-z0-9]+)!i', "\$1\n\$2", $result);
         $result = preg_replace('!(\nnamespace)!i', "\n\$1", $result);
 
         return preg_replace('!(\nuse [^\n]+\n)(/|class|interface)!i', "\$1\n\$2", $result);

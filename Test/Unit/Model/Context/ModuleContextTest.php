@@ -21,40 +21,40 @@ class ModuleContextTest extends TestCase
 
     public const MODULE_PATH = '/tmp/module';
 
-    public function testConstructWithEmptyName()
+    public function testConstructWithEmptyName(): void
     {
         $this->expectExceptionMessage('Module name is empty');
         new ModuleContext('', self::MODULE_PATH);
     }
 
-    public function testConstructWithInvalidName()
+    public function testConstructWithInvalidName(): void
     {
         $this->expectExceptionMessage('Invalid module name test');
         new ModuleContext('test', self::MODULE_PATH);
     }
 
-    public function testConstructWithEmptyPath()
+    public function testConstructWithEmptyPath(): void
     {
         $this->expectExceptionMessage('Module path is empty');
         new ModuleContext(self::MODULE_NAME, '');
     }
 
-    public function testGetName()
+    public function testGetName(): void
     {
         $this->assertEquals(self::MODULE_NAME, self::createContext()->getName());
     }
 
-    public function testGetPath()
+    public function testGetPath(): void
     {
         $this->assertEquals(self::MODULE_PATH, self::createContext()->getPath());
     }
 
-    public function testGetDependencies()
+    public function testGetDependencies(): void
     {
         $this->assertEquals([], self::createContext()->getDependencies());
     }
 
-    public function testSetDependencies()
+    public function testSetDependencies(): void
     {
         $dependencies = [
             self::createContext('Vendor2_Module1'),
@@ -66,42 +66,36 @@ class ModuleContextTest extends TestCase
         $this->assertEquals($dependencies, $context->getDependencies());
     }
 
-    public function testGetVersion()
+    public function testGetVersion(): void
     {
         $this->assertEquals('0.0.1', self::createContext()->getVersion());
     }
 
-    public function testSetVersion()
+    public function testSetVersion(): void
     {
         $context = self::createContext();
         $context->setVersion('1.2.3');
         $this->assertEquals('1.2.3', $context->getVersion());
     }
 
-    public function testGetComposerPackage()
+    public function testGetComposerPackage(): void
     {
         $context = self::createContext(self::MODULE_API_NAME);
         $this->assertEquals('vendor1/module-module1-api', $context->getComposerPackage());
     }
 
-    public function testGetPsr4Prefix()
+    public function testGetPsr4Prefix(): void
     {
         $this->assertEquals('Vendor1\\Module1\\', self::createContext()->getPsr4Prefix());
     }
 
-    public function testGetModuleDescription()
+    public function testGetModuleDescription(): void
     {
         $context = self::createContext(self::MODULE_API_NAME);
         $this->assertEquals('Magento module responsible for Vendor1 Module1 Api', $context->getDescription());
     }
 
-    /**
-     * @param string $name
-     * @param string $path
-     *
-     * @return ModuleContext
-     */
-    public static function createContext($name = self::MODULE_NAME, $path = self::MODULE_PATH)
+    public static function createContext(string $name = self::MODULE_NAME, string $path = self::MODULE_PATH): ModuleContext
     {
         return new ModuleContext($name, $path);
     }

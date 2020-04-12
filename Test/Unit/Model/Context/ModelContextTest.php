@@ -7,7 +7,6 @@
 namespace IgorRain\CodeGenerator\Test\Unit\Model\Context;
 
 use IgorRain\CodeGenerator\Model\Context\ModelContext;
-use IgorRain\CodeGenerator\Model\Context\ModelFieldContext;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -131,7 +130,6 @@ class ModelContextTest extends TestCase
     public function testGetPrimaryKey(): void
     {
         $primaryKey = self::createContext()->getPrimaryKey();
-        $this->assertInstanceOf(ModelFieldContext::class, $primaryKey);
         $this->assertEquals('entity_id', $primaryKey->getName());
     }
 

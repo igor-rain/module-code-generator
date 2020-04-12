@@ -20,13 +20,12 @@ class Model extends Command
 {
     public const NAME = 'dev:make:model';
 
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(self::NAME)
             ->setDescription(
                 'Generate model'
             );
-        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -7,22 +7,22 @@
 namespace IgorRain\CodeGenerator\Model\Make;
 
 use IgorRain\CodeGenerator\Model\Context\ModelContext;
-use IgorRain\CodeGenerator\Model\Generator\CollectionClassGenerator;
-use IgorRain\CodeGenerator\Model\Generator\DbSchemaXmlGenerator;
-use IgorRain\CodeGenerator\Model\Generator\DiXmlGenerator;
-use IgorRain\CodeGenerator\Model\Generator\ModelClassGenerator;
-use IgorRain\CodeGenerator\Model\Generator\ModelIntegrationTestFixtureGenerator;
-use IgorRain\CodeGenerator\Model\Generator\ModelInterfaceGenerator;
-use IgorRain\CodeGenerator\Model\Generator\ModelRollbackIntegrationTestFixtureGenerator;
-use IgorRain\CodeGenerator\Model\Generator\ModelUnitTestGenerator;
-use IgorRain\CodeGenerator\Model\Generator\RepositoryApiFunctionalTestGenerator;
-use IgorRain\CodeGenerator\Model\Generator\RepositoryClassGenerator;
-use IgorRain\CodeGenerator\Model\Generator\RepositoryIntegrationTestGenerator;
-use IgorRain\CodeGenerator\Model\Generator\RepositoryInterfaceGenerator;
-use IgorRain\CodeGenerator\Model\Generator\RepositoryUnitTestGenerator;
-use IgorRain\CodeGenerator\Model\Generator\ResourceModelClassGenerator;
-use IgorRain\CodeGenerator\Model\Generator\SearchResultsClassGenerator;
-use IgorRain\CodeGenerator\Model\Generator\SearchResultsInterfaceGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Api\ModelInterfaceGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Api\RepositoryInterfaceGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Api\SearchResultsInterfaceGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Etc\DbSchemaXmlGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Etc\DiXmlGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Model\CollectionGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Model\ModelGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Model\RepositoryGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Model\ResourceModelGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Model\SearchResultsGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Test\ModelIntegrationTestFixtureGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Test\ModelRollbackIntegrationTestFixtureGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Test\ModelUnitTestGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Test\RepositoryApiFunctionalTestGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Test\RepositoryIntegrationTestGenerator;
+use IgorRain\CodeGenerator\Model\Generator\Test\RepositoryUnitTestGenerator;
 
 class Model
 {
@@ -39,23 +39,23 @@ class Model
      */
     private $repositoryInterfaceGenerator;
     /**
-     * @var ResourceModelClassGenerator
+     * @var ResourceModelGenerator
      */
     private $resourceModelClassGenerator;
     /**
-     * @var ModelClassGenerator
+     * @var ModelGenerator
      */
     private $modelClassGenerator;
     /**
-     * @var CollectionClassGenerator
+     * @var CollectionGenerator
      */
     private $collectionClassGenerator;
     /**
-     * @var RepositoryClassGenerator
+     * @var RepositoryGenerator
      */
     private $repositoryClassGenerator;
     /**
-     * @var SearchResultsClassGenerator
+     * @var SearchResultsGenerator
      */
     private $searchResultsClassGenerator;
     /**
@@ -95,11 +95,11 @@ class Model
         ModelInterfaceGenerator $modelInterfaceGenerator,
         SearchResultsInterfaceGenerator $searchResultsInterfaceGenerator,
         RepositoryInterfaceGenerator $repositoryInterfaceGenerator,
-        ResourceModelClassGenerator $resourceModelClassGenerator,
-        ModelClassGenerator $modelClassGenerator,
-        CollectionClassGenerator $collectionClassGenerator,
-        RepositoryClassGenerator $repositoryClassGenerator,
-        SearchResultsClassGenerator $searchResultsClassGenerator,
+        ResourceModelGenerator $resourceModelClassGenerator,
+        ModelGenerator $modelClassGenerator,
+        CollectionGenerator $collectionClassGenerator,
+        RepositoryGenerator $repositoryClassGenerator,
+        SearchResultsGenerator $searchResultsClassGenerator,
         DiXmlGenerator $diXmlGenerator,
         DbSchemaXmlGenerator $dbSchemaXmlGenerator,
         RepositoryUnitTestGenerator $repositoryUnitTestGenerator,
@@ -130,7 +130,7 @@ class Model
     /**
      * @param ModelContext $context
      */
-    public function make($context)
+    public function make($context): void
     {
         $modelInterfaceFilePath = $context->getModelInterface()->getAbsoluteFilePath();
         $this->modelInterfaceGenerator->generate($modelInterfaceFilePath, $context);

@@ -10,7 +10,7 @@ use Magento\Framework\Component\ComponentRegistrar;
 
 class Locator
 {
-    public function getNewModulePath($moduleName): string
+    public function getNewModulePath(string $moduleName): string
     {
         $parts = explode('_', $moduleName);
         if (2 !== count($parts)) {
@@ -20,7 +20,7 @@ class Locator
         return BP . '/app/code/' . implode('/', $parts);
     }
 
-    public function getModulePath($moduleName): ?string
+    public function getModulePath(string $moduleName): ?string
     {
         $componentRegistrar = new ComponentRegistrar();
 

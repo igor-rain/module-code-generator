@@ -23,7 +23,12 @@ class TextSource implements SourceInterface
         $this->fileName = $fileName;
     }
 
-    public function load()
+    public function exists(): bool
+    {
+        return file_exists($this->fileName);
+    }
+
+    public function load(): void
     {
         if (!file_exists($this->fileName)) {
             throw new \RuntimeException(sprintf('Missing file %s', $this->fileName));
@@ -32,7 +37,7 @@ class TextSource implements SourceInterface
         $this->content = file_get_contents($this->fileName);
     }
 
-    public function save()
+    public function save(): void
     {
         $dir = dirname($this->fileName);
         if (!is_dir($dir) && !mkdir($dir, 0770, true) && !is_dir($dir)) {
@@ -41,18 +46,12 @@ class TextSource implements SourceInterface
         file_put_contents($this->fileName, $this->content);
     }
 
-    /**
-     * @return null|string
-     */
-    public function getContent()
+    public function getContent(): ?string
     {
         return $this->content;
     }
 
-    /**
-     * @param string $content
-     */
-    public function setContent($content)
+    public function setContent(string $content): void
     {
         $this->content = $content;
     }

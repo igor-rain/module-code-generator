@@ -75,42 +75,27 @@ class ModelContext
         $this->primaryKeyField = $primaryKeyField;
     }
 
-    /**
-     * @return string
-     */
-    public function getRelativeClassName()
+    public function getRelativeClassName(): string
     {
         return $this->relativeClassName;
     }
 
-    /**
-     * @return string
-     */
-    public function getClassDescription()
+    public function getClassDescription(): string
     {
         return strtolower(str_replace(['\\', '/'], '', preg_replace('/(?<!^)[A-Z]/', ' $0', $this->getRelativeClassName())));
     }
 
-    /**
-     * @return string
-     */
-    public function getVariableName()
+    public function getVariableName(): string
     {
         return lcfirst(str_replace(['\\', '/'], '', $this->getRelativeClassName()));
     }
 
-    /**
-     * @return null|string
-     */
-    public function getTableName()
+    public function getTableName(): string
     {
         return $this->tableName;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getTableDescription()
+    public function getTableDescription(): string
     {
         return ucwords(strtr($this->getTableName(), [
             '_entity' => '',
@@ -118,10 +103,7 @@ class ModelContext
         ])) . ' Table';
     }
 
-    /**
-     * @return ModelFieldContext
-     */
-    public function getPrimaryKey()
+    public function getPrimaryKey(): ModelFieldContext
     {
         return $this->primaryKeyField;
     }
@@ -129,134 +111,98 @@ class ModelContext
     /**
      * @return ModelFieldContext[]
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
 
-    /**
-     * @return ModuleContext
-     */
-    public function getModule()
+    public function getModule(): ModuleContext
     {
         return $this->module;
     }
 
-    /**
-     * @return ModuleContext
-     */
-    public function getApiModule()
+    public function getApiModule(): ModuleContext
     {
         return $this->apiModule;
     }
 
-    public function getEventPrefixName()
+    public function getEventPrefixName(): string
     {
         [, $module] = explode('_', $this->module->getName());
 
         return strtolower($module . '_' . str_replace(['\\', '/'], '', preg_replace('/(?<!^)[A-Z]/', '_$0', $this->relativeClassName)));
     }
 
-    public function getEventObjectName()
+    public function getEventObjectName(): string
     {
         return strtolower(str_replace(['\\', '/'], '', preg_replace('/(?<!^)[A-Z]/', '_$0', $this->relativeClassName)));
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getModelInterface()
+    public function getModelInterface(): ClassContext
     {
         return $this->getClassContext($this->apiModule, 'Api\\Data\\'
             . str_replace('/', '\\', $this->getRelativeClassName())
             . 'Interface');
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getModel()
+    public function getModel(): ClassContext
     {
         return $this->getClassContext($this->module, 'Model\\'
             . str_replace('/', '\\', $this->getRelativeClassName()));
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getSearchResultsInterface()
+    public function getSearchResultsInterface(): ClassContext
     {
         return $this->getClassContext($this->apiModule, 'Api\\Data\\'
             . str_replace('/', '\\', $this->getRelativeClassName())
             . 'SearchResultsInterface');
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getSearchResults()
+    public function getSearchResults(): ClassContext
     {
         return $this->getClassContext($this->module, 'Model\\'
             . str_replace('/', '\\', $this->getRelativeClassName())
             . 'SearchResults');
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getRepositoryInterface()
+    public function getRepositoryInterface(): ClassContext
     {
         return $this->getClassContext($this->apiModule, 'Api\\'
             . str_replace('/', '\\', $this->getRelativeClassName())
             . 'RepositoryInterface');
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getRepository()
+    public function getRepository(): ClassContext
     {
         return $this->getClassContext($this->module, 'Model\\'
             . str_replace('/', '\\', $this->getRelativeClassName())
             . 'Repository');
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getResourceModel()
+    public function getResourceModel(): ClassContext
     {
         return $this->getClassContext($this->module, 'Model\\ResourceModel\\'
             . str_replace('/', '\\', $this->getRelativeClassName()));
     }
 
-    /**
-     * @return ClassContext
-     */
-    public function getCollection()
+    public function getCollection(): ClassContext
     {
         return $this->getClassContext($this->module, 'Model\\ResourceModel\\'
             . str_replace('/', '\\', $this->getRelativeClassName())
             . '\\Collection');
     }
 
-    public function getFixtureAbsolutePath($testType, $name)
+    public function getFixtureAbsolutePath($testType, $name): string
     {
         return $this->module->getPath() . '/Test/' . $testType . '/_files/' . $name . '.php';
     }
 
-    public function getFixtureRelativePath($testType, $name)
+    public function getFixtureRelativePath($testType, $name): string
     {
         return '../../../../app/code/' . str_replace('_', '/', $this->module->getName()) . '/Test/' . $testType . '/_files/' . $name . '.php';
     }
 
-    /**
-     * @param ModuleContext $module
-     * @param $relativeClassName
-     *
-     * @return ClassContext
-     */
-    private function getClassContext($module, $relativeClassName)
+    private function getClassContext(ModuleContext $module, string $relativeClassName): ClassContext
     {
         $className = str_replace('_', '\\', $module->getName()) . '\\' . $relativeClassName;
         if (!isset($this->classCache[$className])) {

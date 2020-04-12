@@ -15,7 +15,7 @@ class XmlSource implements SourceInterface
      */
     private $fileName;
     /**
-     * @var null|DOMDocument
+     * @var DOMDocument
      */
     private $dom;
 
@@ -28,12 +28,12 @@ class XmlSource implements SourceInterface
         $this->dom->formatOutput = true;
     }
 
-    public function exists()
+    public function exists(): bool
     {
         return file_exists($this->fileName);
     }
 
-    public function load()
+    public function load(): void
     {
         if (!$this->exists()) {
             throw new \RuntimeException(sprintf('Missing file %s', $this->fileName));
@@ -42,7 +42,7 @@ class XmlSource implements SourceInterface
         $this->dom->load($this->fileName);
     }
 
-    public function save()
+    public function save(): void
     {
         $dir = dirname($this->fileName);
         if (!is_dir($dir) && !mkdir($dir, 0770, true) && !is_dir($dir)) {
@@ -57,10 +57,7 @@ class XmlSource implements SourceInterface
         file_put_contents($this->fileName, $content);
     }
 
-    /**
-     * @return DOMDocument
-     */
-    public function getDocument()
+    public function getDocument(): DOMDocument
     {
         return $this->dom;
     }
