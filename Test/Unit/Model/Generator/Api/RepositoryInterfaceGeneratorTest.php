@@ -51,11 +51,11 @@ interface ItemRepositoryInterface
     /**
      * Get menu item by id
      *
-     * @param string $menuItemId
+     * @param int $menuItemId
      * @return \Vendor1\Module1Api\Api\Data\Menu\ItemInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getById($menuItemId): ItemInterface;
+    public function getById(int $menuItemId): ItemInterface;
 
     /**
      * Delete menu item
@@ -69,12 +69,12 @@ interface ItemRepositoryInterface
     /**
      * Delete menu item by id
      *
-     * @param string $menuItemId
+     * @param int $menuItemId
      * @return void
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\CouldNotDeleteException
      */
-    public function deleteById($menuItemId): void;
+    public function deleteById(int $menuItemId): void;
 
     /**
      * Get menu item list

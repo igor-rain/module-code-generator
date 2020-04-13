@@ -55,44 +55,69 @@ class Item extends AbstractModel implements ItemInterface
         $this->_init(ItemResource::class);
     }
 
-    public function getSku()
+    public function getId(): ?int
+    {
+        return parent::getId();
+    }
+
+    public function getSku(): ?string
     {
         return $this->getData(self::SKU);
     }
 
-    public function setSku($sku)
+    public function setSku(?string $sku): ItemInterface
     {
         return $this->setData(self::SKU, $sku);
     }
 
-    public function getName()
+    public function getName(): ?string
     {
         return $this->getData(self::NAME);
     }
 
-    public function setName($name)
+    public function setName(?string $name): ItemInterface
     {
         return $this->setData(self::NAME, $name);
     }
 
-    public function getPrice()
+    public function getDescription(): ?string
+    {
+        return $this->getData(self::DESCRIPTION);
+    }
+
+    public function setDescription(?string $description): ItemInterface
+    {
+        return $this->setData(self::DESCRIPTION, $description);
+    }
+
+    public function getPrice(): ?float
     {
         return $this->getData(self::PRICE);
     }
 
-    public function setPrice($price)
+    public function setPrice(?float $price): ItemInterface
     {
         return $this->setData(self::PRICE, $price);
     }
 
-    public function getAttributeSetId()
+    public function getAttributeSetId(): ?int
     {
         return $this->getData(self::ATTRIBUTE_SET_ID);
     }
 
-    public function setAttributeSetId($attributeSetId)
+    public function setAttributeSetId(?int $attributeSetId): ItemInterface
     {
         return $this->setData(self::ATTRIBUTE_SET_ID, $attributeSetId);
+    }
+
+    public function getIsVisible(): ?bool
+    {
+        return $this->getData(self::IS_VISIBLE);
+    }
+
+    public function setIsVisible(?bool $isVisible): ItemInterface
+    {
+        return $this->setData(self::IS_VISIBLE, $isVisible);
     }
 }
 ';

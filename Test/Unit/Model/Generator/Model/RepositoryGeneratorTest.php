@@ -90,7 +90,7 @@ class ItemRepository implements ItemRepositoryInterface
         return $menuItem;
     }
 
-    public function getById($menuItemId): ItemInterface
+    public function getById(int $menuItemId): ItemInterface
     {
         $menuItem = $this->itemFactory->create();
         $this->resource->load($menuItem, $menuItemId);
@@ -109,7 +109,7 @@ class ItemRepository implements ItemRepositoryInterface
         }
     }
 
-    public function deleteById($menuItemId): void
+    public function deleteById(int $menuItemId): void
     {
         $this->delete($this->getById($menuItemId));
     }

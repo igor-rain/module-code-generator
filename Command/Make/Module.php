@@ -29,7 +29,7 @@ class Module extends Command
     {
         $helper = $this->getHelper('question');
 
-        $moduleNameQuestion = new Question('Module name: ');
+        $moduleNameQuestion = new Question('Module name (e.g. Vendor_Module): ');
         $moduleName = $helper->ask($input, $output, $moduleNameQuestion);
 
         $objectManager = ObjectManager::getInstance();

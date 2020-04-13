@@ -39,21 +39,25 @@ interface ItemInterface
 
     public const NAME = \'name\';
 
+    public const DESCRIPTION = \'description\';
+
     public const PRICE = \'price\';
 
     public const ATTRIBUTE_SET_ID = \'attribute_set_id\';
 
+    public const IS_VISIBLE = \'is_visible\';
+
     /**
      * Menu item id
      *
-     * @return string|null
+     * @return int|null
      */
-    public function getId();
+    public function getId(): ?int;
 
     /**
      * Set menu item id
      *
-     * @param string $id
+     * @param int|null $id
      * @return $this
      */
     public function setId($id);
@@ -63,60 +67,90 @@ interface ItemInterface
      *
      * @return string|null
      */
-    public function getSku();
+    public function getSku(): ?string;
 
     /**
      * Set menu item sku
      *
-     * @param string $sku
+     * @param string|null $sku
      * @return $this
      */
-    public function setSku($sku);
+    public function setSku(?string $sku): self;
 
     /**
      * Menu item name
      *
      * @return string|null
      */
-    public function getName();
+    public function getName(): ?string;
 
     /**
      * Set menu item name
      *
-     * @param string $name
+     * @param string|null $name
      * @return $this
      */
-    public function setName($name);
+    public function setName(?string $name): self;
+
+    /**
+     * Menu item description
+     *
+     * @return string|null
+     */
+    public function getDescription(): ?string;
+
+    /**
+     * Set menu item description
+     *
+     * @param string|null $description
+     * @return $this
+     */
+    public function setDescription(?string $description): self;
 
     /**
      * Menu item price
      *
-     * @return string|null
+     * @return float|null
      */
-    public function getPrice();
+    public function getPrice(): ?float;
 
     /**
      * Set menu item price
      *
-     * @param string $price
+     * @param float|null $price
      * @return $this
      */
-    public function setPrice($price);
+    public function setPrice(?float $price): self;
 
     /**
      * Menu item attribute set id
      *
-     * @return string|null
+     * @return int|null
      */
-    public function getAttributeSetId();
+    public function getAttributeSetId(): ?int;
 
     /**
      * Set menu item attribute set id
      *
-     * @param string $attributeSetId
+     * @param int|null $attributeSetId
      * @return $this
      */
-    public function setAttributeSetId($attributeSetId);
+    public function setAttributeSetId(?int $attributeSetId): self;
+
+    /**
+     * Menu item is visible
+     *
+     * @return bool|null
+     */
+    public function getIsVisible(): ?bool;
+
+    /**
+     * Set menu item is visible
+     *
+     * @param bool|null $isVisible
+     * @return $this
+     */
+    public function setIsVisible(?bool $isVisible): self;
 }
 ';
     }

@@ -32,11 +32,8 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
 
         $table = $this->getOrCreateTable($doc->documentElement, $context);
 
-        $this->getOrCreatePrimaryKeyColumn($table, $context);
         foreach ($context->getFields() as $field) {
-            if (!$field->getIsPrimary()) {
-                $this->getOrCreateColumn($table, $field);
-            }
+            $this->getOrCreateColumn($table, $field);
         }
         $this->getOrCreatePrimaryKeyConstraint($table, $context);
 
@@ -63,39 +60,63 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
         $column = $this->findColumn($table, $context->getName());
         if (!$column) {
             $column = $table->ownerDocument->createElement('column');
-            $column->setAttribute('xsi:type', 'varchar');
-            $column->setAttribute('name', $context->getName());
-            $column->setAttribute('nullable', 'true');
-            $column->setAttribute('length', '255');
-            $column->setAttribute('comment', $context->getDescriptionInTable());
+            $this->setColumnAttributes($column, $context);
 
-            $lastColumn = $this->getLastChildByTagName($table, 'column');
-            if ($lastColumn) {
-                $table->insertBefore($column, $lastColumn->nextSibling);
-            } else {
+            if ($context->getIsPrimary()) {
                 $table->insertBefore($column, $table->firstChild);
+            } else {
+                $lastColumn = $this->getLastChildByTagName($table, 'column');
+                if ($lastColumn) {
+                    $table->insertBefore($column, $lastColumn->nextSibling);
+                } else {
+                    $table->insertBefore($column, $table->firstChild);
+                }
             }
         }
 
         return $column;
     }
 
-    protected function getOrCreatePrimaryKeyColumn(DOMElement $table, ModelContext $context): DOMElement
+    protected function setColumnAttributes(DOMElement $column, ModelFieldContext $context)
     {
-        $column = $this->findColumn($table, $context->getPrimaryKey()->getName());
-        if (!$column) {
-            $column = $table->ownerDocument->createElement('column');
-            $column->setAttribute('xsi:type', 'int');
-            $column->setAttribute('name', $context->getPrimaryKey()->getName());
-            $column->setAttribute('padding', '10');
-            $column->setAttribute('unsigned', 'true');
-            $column->setAttribute('nullable', 'false');
-            $column->setAttribute('identity', 'true');
-            $column->setAttribute('comment', $context->getPrimaryKey()->getDescriptionInTable());
-            $table->insertBefore($column, $table->firstChild);
+        $column->setAttribute('xsi:type', 'varchar');
+        $column->setAttribute('name', $context->getName());
+
+        switch ($context->getType()) {
+            case 'string':
+                $column->setAttribute('xsi:type', 'varchar');
+                $column->setAttribute('length', '255');
+                break;
+            case 'int':
+                $column->setAttribute('xsi:type', 'int');
+                $column->setAttribute('padding', '10');
+                break;
+            case 'float':
+                $column->setAttribute('xsi:type', 'decimal');
+                $column->setAttribute('scale', '6');
+                $column->setAttribute('precision', '20');
+                break;
+            case 'text':
+                $column->setAttribute('xsi:type', 'text');
+                break;
+            case 'bool':
+                $column->setAttribute('xsi:type', 'smallint');
+                $column->setAttribute('padding', '5');
+                $column->setAttribute('unsigned', 'true');
+                break;
         }
 
-        return $column;
+        if ($context->getIsPrimary()) {
+            if ($context->getType() === 'int') {
+                $column->setAttribute('unsigned', 'true');
+                $column->setAttribute('identity', 'true');
+            }
+            $column->setAttribute('nullable', 'false');
+        } else {
+            $column->setAttribute('nullable', 'true');
+        }
+
+        $column->setAttribute('comment', $context->getDescriptionInTable());
     }
 
     protected function getOrCreatePrimaryKeyConstraint(DOMElement $table, ModelContext $context): DOMElement

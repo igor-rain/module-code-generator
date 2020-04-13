@@ -85,7 +85,7 @@ class {shortRepository}Test extends WebapiAbstract
     /**
      * @magentoApiDataFixture {modelDataFixture}
      */
-    public function testGet()
+    public function testGet(): void
     {
         $serviceInfo = [
             \'rest\' => [
@@ -100,14 +100,14 @@ class {shortRepository}Test extends WebapiAbstract
         ];
 
         ${variable} = $this->_webApiCall($serviceInfo, [\'{variable}Id\' => self::EXISTING_ID]);
-        $this->assertEquals(${variable}[\'id\'], self::EXISTING_ID);
+        $this->assertEquals(self::EXISTING_ID, ${variable}[\'id\']);
     }
 
     /**
      * @magentoApiDataFixture {modelDataFixture}
      * @expectedException \Exception
      */
-    public function testGetWhenDoesNotExists()
+    public function testGetWhenDoesNotExists(): void
     {
         $serviceInfo = [
             \'rest\' => [
@@ -124,7 +124,7 @@ class {shortRepository}Test extends WebapiAbstract
         $this->_webApiCall($serviceInfo, [\'{variable}Id\' => self::MISSING_ID]);
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         try {
             $this->repository->deleteById(self::NEW_ID);
@@ -149,14 +149,14 @@ class {shortRepository}Test extends WebapiAbstract
             ],
         ]);
 
-        $this->assertEquals(${variable}[\'id\'], self::NEW_ID);
+        $this->assertEquals(self::NEW_ID, ${variable}[\'id\']);
     }
 
     /**
      * @magentoApiDataFixture {modelDataFixture}
      * @expectedException \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $serviceInfo = [
             \'rest\' => [
@@ -177,7 +177,7 @@ class {shortRepository}Test extends WebapiAbstract
     /**
      * @magentoApiDataFixture {modelDataFixture}
      */
-    public function testList()
+    public function testList(): void
     {
         $searchData = $this->searchCriteriaBuilder
             ->addFilter(\'{primaryKey}\', self::EXISTING_ID, \'eq\')

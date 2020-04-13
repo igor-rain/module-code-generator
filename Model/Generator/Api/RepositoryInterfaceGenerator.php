@@ -11,6 +11,7 @@ use IgorRain\CodeGenerator\Model\ResourceModel\Source\PhpSource;
 use IgorRain\CodeGenerator\Model\ResourceModel\Source\SourceFactory;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use PhpParser\BuilderFactory;
+use PhpParser\Node;
 
 class RepositoryInterfaceGenerator
 {
@@ -54,12 +55,12 @@ class RepositoryInterfaceGenerator
 
         $getByIdMethod = $factory->method('getById')
             ->makePublic()
-            ->addParam($factory->param($context->getVariableName() . 'Id'))
+            ->addParam($factory->param($context->getVariableName() . 'Id')->setType(new Node\Name($context->getPrimaryKey()->getPhpType())))
             ->setReturnType($context->getModelInterface()->getShortName())
             ->setDocComment('/**
                     * Get ' . $context->getClassDescription() . ' by id
                     *
-                    * @param string $' . $context->getVariableName() . 'Id
+                    * @param ' . $context->getPrimaryKey()->getPhpType() . ' $' . $context->getVariableName() . 'Id
                     * @return \\' . $context->getModelInterface()->getName() . '
                     * @throws \Magento\Framework\Exception\NoSuchEntityException
                     */');
@@ -78,12 +79,12 @@ class RepositoryInterfaceGenerator
 
         $deleteByIdMethod = $factory->method('deleteById')
             ->makePublic()
-            ->addParam($factory->param($context->getVariableName() . 'Id'))
+            ->addParam($factory->param($context->getVariableName() . 'Id')->setType(new Node\Name($context->getPrimaryKey()->getPhpType())))
             ->setReturnType('void')
             ->setDocComment('/**
                     * Delete ' . $context->getClassDescription() . ' by id
                     *
-                    * @param string $' . $context->getVariableName() . 'Id
+                    * @param ' . $context->getPrimaryKey()->getPhpType() . ' $' . $context->getVariableName() . 'Id
                     * @return void
                     * @throws \Magento\Framework\Exception\NoSuchEntityException
                     * @throws \Magento\Framework\Exception\CouldNotDeleteException

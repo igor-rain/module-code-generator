@@ -78,11 +78,13 @@ class DbSchemaXmlGeneratorTest extends TestCase
         return '<?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="menu_item_entity" resource="default" engine="innodb" comment="Menu Item Table">
-        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
-        <column xsi:type="varchar" name="sku" nullable="true" length="255" comment="Sku"/>
-        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
-        <column xsi:type="varchar" name="price" nullable="true" length="255" comment="Price"/>
-        <column xsi:type="varchar" name="attribute_set_id" nullable="true" length="255" comment="Attribute Set ID"/>
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" identity="true" nullable="false" comment="Entity ID"/>
+        <column xsi:type="varchar" name="sku" length="255" nullable="true" comment="Sku"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="true" comment="Name"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <column xsi:type="decimal" name="price" scale="6" precision="20" nullable="true" comment="Price"/>
+        <column xsi:type="int" name="attribute_set_id" padding="10" nullable="true" comment="Attribute Set ID"/>
+        <column xsi:type="smallint" name="is_visible" padding="5" unsigned="true" nullable="true" comment="Is Visible"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
@@ -112,12 +114,14 @@ class DbSchemaXmlGeneratorTest extends TestCase
         return '<?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="menu_item_entity" resource="default" engine="innodb" comment="Menu Item Table">
-        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" identity="true" nullable="false" comment="Entity ID"/>
         <column xsi:type="varchar" name="sku"/>
         <column xsi:type="varchar" name="price" comment="Price"/>
         <column xsi:type="varchar" name="attribute_set_id_new" nullable="true" length="255" comment="Attribute Set ID"/>
-        <column xsi:type="varchar" name="name" nullable="true" length="255" comment="Name"/>
-        <column xsi:type="varchar" name="attribute_set_id" nullable="true" length="255" comment="Attribute Set ID"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="true" comment="Name"/>
+        <column xsi:type="text" name="description" nullable="true" comment="Description"/>
+        <column xsi:type="int" name="attribute_set_id" padding="10" nullable="true" comment="Attribute Set ID"/>
+        <column xsi:type="smallint" name="is_visible" padding="5" unsigned="true" nullable="true" comment="Is Visible"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>

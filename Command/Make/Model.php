@@ -36,7 +36,7 @@ class Model extends Command
 
         $helper = $this->getHelper('question');
 
-        $moduleNameQuestion = new Question('Module name: ');
+        $moduleNameQuestion = new Question('Module name (e.g. Vendor_Module): ');
         $moduleName = $helper->ask($input, $output, $moduleNameQuestion);
 
         $modulePath = $locator->getModulePath($moduleName);
@@ -53,10 +53,10 @@ class Model extends Command
             $moduleApiContext = new ModuleContext($apiModuleName, $apiModulePath);
         }
 
-        $classNameQuestion = new Question('Class name: ');
+        $classNameQuestion = new Question('Model name (e.g. Product): ');
         $className = $helper->ask($input, $output, $classNameQuestion);
 
-        $tableNameQuestion = new Question('Table name: ');
+        $tableNameQuestion = new Question('Table name (e.g. catalog_product_entity): ');
         $tableName = $helper->ask($input, $output, $tableNameQuestion);
 
         $fields = [];
@@ -64,18 +64,20 @@ class Model extends Command
         $primaryKeyDefault = 'entity_id';
         $primaryKeyQuestion = new Question('Primary key (default is ' . $primaryKeyDefault . '): ', $primaryKeyDefault);
         $primaryKey = $helper->ask($input, $output, $primaryKeyQuestion);
-        $primaryKeyField = new ModelFieldContext($primaryKey);
+        $primaryKeyField = new ModelFieldContext($primaryKey, 'int');
         $primaryKeyField->setIsPrimary(true);
         $fields[] = $primaryKeyField;
 
         for ($fieldIndex = 1;; ++$fieldIndex) {
-            $fieldQuestion = new Question('Field #' . $fieldIndex . ': ');
-            $fieldName = $helper->ask($input, $output, $fieldQuestion);
-            if ($fieldName) {
-                $fields[] = new ModelFieldContext($fieldName);
-            } else {
+            $fieldNameQuestion = new Question('Field #' . $fieldIndex . ' name: ');
+            $fieldName = $helper->ask($input, $output, $fieldNameQuestion);
+            if (!$fieldName) {
                 break;
             }
+
+            $fieldTypeQuestion = new Question('Field #' . $fieldIndex . ' type: ');
+            $fieldType = $helper->ask($input, $output, $fieldTypeQuestion);
+            $fields[] = new ModelFieldContext($fieldName, $fieldType);
         }
 
         $context = new ModelContext(

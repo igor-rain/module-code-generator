@@ -72,9 +72,19 @@ class ModelGenerator
         $class->addStmt($construct);
 
         foreach ($context->getFields() as $field) {
-            if (!$field->getIsPrimary()) {
+            if ($field->getIsPrimary()) {
+                $getMethod = $factory->method('getId')
+                    ->makePublic()
+                    ->setReturnType(new Node\NullableType($field->getPhpType()))
+                    ->addStmt(
+                        new Node\Stmt\Return_(new Node\Expr\StaticCall(new Node\Name('parent'), 'getId'))
+                    );
+
+                $class->addStmt($getMethod);
+            } else {
                 $getMethod = $factory->method($field->getMethodName('get'))
                     ->makePublic()
+                    ->setReturnType(new Node\NullableType($field->getPhpType()))
                     ->addStmt(
                         new Node\Stmt\Return_(new Node\Expr\MethodCall(new Node\Expr\Variable('this'), 'getData', [
                             new Node\Arg(new Node\Expr\ClassConstFetch(new Node\Name('self'), $field->getConstantName())),
@@ -83,7 +93,8 @@ class ModelGenerator
 
                 $setMethod = $factory->method($field->getMethodName('set'))
                     ->makePublic()
-                    ->addParam($factory->param($field->getVariableName()))
+                    ->addParam($factory->param($field->getVariableName())->setType(new Node\NullableType($field->getPhpType())))
+                    ->setReturnType(new Node\Name($context->getModelInterface()->getShortName()))
                     ->addStmt(
                         new Node\Stmt\Return_(new Node\Expr\MethodCall(new Node\Expr\Variable('this'), 'setData', [
                             new Node\Arg(new Node\Expr\ClassConstFetch(new Node\Name('self'), $field->getConstantName())),

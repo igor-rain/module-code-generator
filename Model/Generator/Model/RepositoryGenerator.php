@@ -48,6 +48,7 @@ class RepositoryGenerator
             '{variable}' => $context->getVariableName(),
             '{description}' => $context->getClassDescription(),
             '{descriptionCapital}' => ucfirst($context->getClassDescription()),
+            '{primaryKeyPhpType}' => $context->getPrimaryKey()->getPhpType()
         ]);
     }
 
@@ -117,7 +118,7 @@ class {shortRepository} implements {shortRepositoryInterface}
         return ${variable};
     }
 
-    public function getById(${variable}Id): {shortModelInterface}
+    public function getById({primaryKeyPhpType} ${variable}Id): {shortModelInterface}
     {
         ${variable} = $this->{modelFactory}->create();
         $this->resource->load(${variable}, ${variable}Id);
@@ -136,7 +137,7 @@ class {shortRepository} implements {shortRepositoryInterface}
         }
     }
 
-    public function deleteById(${variable}Id): void
+    public function deleteById({primaryKeyPhpType} ${variable}Id): void
     {
         $this->delete($this->getById(${variable}Id));
     }

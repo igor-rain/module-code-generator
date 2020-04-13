@@ -65,7 +65,7 @@ class ItemRepositoryTest extends WebapiAbstract
     /**
      * @magentoApiDataFixture ../../../../app/code/Vendor1/Module1/Test/Integration/_files/menu_item.php
      */
-    public function testGet()
+    public function testGet(): void
     {
         $serviceInfo = [
             \'rest\' => [
@@ -80,14 +80,14 @@ class ItemRepositoryTest extends WebapiAbstract
         ];
 
         $menuItem = $this->_webApiCall($serviceInfo, [\'menuItemId\' => self::EXISTING_ID]);
-        $this->assertEquals($menuItem[\'id\'], self::EXISTING_ID);
+        $this->assertEquals(self::EXISTING_ID, $menuItem[\'id\']);
     }
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Vendor1/Module1/Test/Integration/_files/menu_item.php
      * @expectedException \Exception
      */
-    public function testGetWhenDoesNotExists()
+    public function testGetWhenDoesNotExists(): void
     {
         $serviceInfo = [
             \'rest\' => [
@@ -104,7 +104,7 @@ class ItemRepositoryTest extends WebapiAbstract
         $this->_webApiCall($serviceInfo, [\'menuItemId\' => self::MISSING_ID]);
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         try {
             $this->repository->deleteById(self::NEW_ID);
@@ -129,14 +129,14 @@ class ItemRepositoryTest extends WebapiAbstract
             ],
         ]);
 
-        $this->assertEquals($menuItem[\'id\'], self::NEW_ID);
+        $this->assertEquals(self::NEW_ID, $menuItem[\'id\']);
     }
 
     /**
      * @magentoApiDataFixture ../../../../app/code/Vendor1/Module1/Test/Integration/_files/menu_item.php
      * @expectedException \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $serviceInfo = [
             \'rest\' => [
@@ -157,7 +157,7 @@ class ItemRepositoryTest extends WebapiAbstract
     /**
      * @magentoApiDataFixture ../../../../app/code/Vendor1/Module1/Test/Integration/_files/menu_item.php
      */
-    public function testList()
+    public function testList(): void
     {
         $searchData = $this->searchCriteriaBuilder
             ->addFilter(\'entity_id\', self::EXISTING_ID, \'eq\')

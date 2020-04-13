@@ -144,8 +144,10 @@ class ModelContextTest extends TestCase
             'entity_id',
             'sku',
             'name',
+            'description',
             'price',
             'attribute_set_id',
+            'is_visible'
         ], $fieldsNames);
     }
 
@@ -229,7 +231,7 @@ class ModelContextTest extends TestCase
      */
     public static function createContext(): ModelContext
     {
-        $primaryKey = ModelFieldContextTest::createContext('entity_id');
+        $primaryKey = ModelFieldContextTest::createContext('entity_id', 'int');
         $primaryKey->setIsPrimary(true);
 
         return new ModelContext(
@@ -239,10 +241,12 @@ class ModelContextTest extends TestCase
             self::TABLE_NAME,
             [
                 $primaryKey,
-                ModelFieldContextTest::createContext('sku'),
-                ModelFieldContextTest::createContext('name'),
-                ModelFieldContextTest::createContext('price'),
-                ModelFieldContextTest::createContext('attribute_set_id'),
+                ModelFieldContextTest::createContext('sku', 'string'),
+                ModelFieldContextTest::createContext('name', 'string'),
+                ModelFieldContextTest::createContext('description', 'text'),
+                ModelFieldContextTest::createContext('price', 'float'),
+                ModelFieldContextTest::createContext('attribute_set_id', 'int'),
+                ModelFieldContextTest::createContext('is_visible', 'bool'),
             ]
         );
     }

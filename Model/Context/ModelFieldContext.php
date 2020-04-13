@@ -8,16 +8,27 @@ namespace IgorRain\CodeGenerator\Model\Context;
 
 class ModelFieldContext
 {
+    public const TYPES = [
+        'string',
+        'text',
+        'bool',
+        'int',
+        'float'
+    ];
     /**
      * @var null|string
      */
     private $name;
     /**
+     * @var null|string
+     */
+    private $type;
+    /**
      * @var bool
      */
     private $isPrimary = false;
 
-    public function __construct($name)
+    public function __construct($name, $type)
     {
         if (!$name) {
             throw new \RuntimeException('Field name is empty');
@@ -26,11 +37,21 @@ class ModelFieldContext
             throw new \RuntimeException('Invalid field name ' . $name);
         }
         $this->name = $name;
+
+        if (!in_array($type, self::TYPES, true)) {
+            throw new \RuntimeException('Unknown field type ' . $type);
+        }
+        $this->type = $type;
     }
 
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getIsPrimary(): bool
@@ -66,5 +87,13 @@ class ModelFieldContext
     public function getDescriptionInTable(): string
     {
         return str_replace('Id', 'ID', ucwords(strtolower(str_replace('_', ' ', $this->getName()))));
+    }
+
+    public function getPhpType()
+    {
+        if ($this->type === 'text') {
+            return 'string';
+        }
+        return $this->type;
     }
 }
