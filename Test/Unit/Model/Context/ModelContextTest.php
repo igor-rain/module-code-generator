@@ -17,8 +17,10 @@ class ModelContextTest extends TestCase
 {
     public const MODULE_NAME = 'Vendor1_Module1';
     public const MODULE_API_NAME = 'Vendor1_Module1Api';
+    public const MODULE_GRAPH_QL_NAME = 'Vendor1_Module1GraphQl';
     public const MODULE_PATH = '/tmp/module';
     public const MODULE_API_PATH = '/tmp/module-api';
+    public const MODULE_GRAPH_QL_PATH = '/tmp/module-graph-ql';
     public const RELATIVE_CLASS_NAME = 'Menu/Item';
     public const TABLE_NAME = 'menu_item_entity';
 
@@ -29,6 +31,7 @@ class ModelContextTest extends TestCase
         new ModelContext(
             ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
             ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
+            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
             '',
             self::TABLE_NAME,
             []
@@ -42,6 +45,7 @@ class ModelContextTest extends TestCase
         new ModelContext(
             ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
             ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
+            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
             self::RELATIVE_CLASS_NAME,
             '',
             []
@@ -55,6 +59,7 @@ class ModelContextTest extends TestCase
         new ModelContext(
             ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
             ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
+            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
             self::RELATIVE_CLASS_NAME,
             self::TABLE_NAME,
             [
@@ -77,6 +82,7 @@ class ModelContextTest extends TestCase
         new ModelContext(
             ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
             ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
+            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
             self::RELATIVE_CLASS_NAME,
             self::TABLE_NAME,
             [
@@ -93,6 +99,7 @@ class ModelContextTest extends TestCase
         new ModelContext(
             ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
             ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
+            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
             self::RELATIVE_CLASS_NAME,
             self::TABLE_NAME,
             [
@@ -161,6 +168,11 @@ class ModelContextTest extends TestCase
         $this->assertEquals(self::MODULE_API_NAME, self::createContext()->getApiModule()->getName());
     }
 
+    public function testGetGraphQlModule(): void
+    {
+        $this->assertEquals(self::MODULE_GRAPH_QL_NAME, self::createContext()->getGraphQlModule()->getName());
+    }
+
     public function testGetEventPrefixName(): void
     {
         $this->assertEquals('module1_menu_item', self::createContext()->getEventPrefixName());
@@ -216,6 +228,16 @@ class ModelContextTest extends TestCase
         $this->assertEquals('Vendor1\\Module1\\Model\\ResourceModel\\Menu\\Item\\Collection', self::createContext()->getCollection()->getName());
     }
 
+    public function testGetGraphQlModelResolver(): void
+    {
+        $this->assertEquals('Vendor1\\Module1GraphQl\\Model\\Resolver\\Menu\\Item', self::createContext()->getGraphQlModelResolver()->getName());
+    }
+
+    public function testGetGraphQlModelDataProvider(): void
+    {
+        $this->assertEquals('Vendor1\\Module1GraphQl\\Model\\Resolver\\DataProvider\\Menu\\Item', self::createContext()->getGraphQlModelDataProvider()->getName());
+    }
+
     public function testGetFixtureAbsolutePath(): void
     {
         $this->assertEquals(self::MODULE_PATH . '/Test/Integration/_files/menu_item.php', self::createContext()->getFixtureAbsolutePath('Integration', 'menu_item'));
@@ -237,6 +259,7 @@ class ModelContextTest extends TestCase
         return new ModelContext(
             ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
             ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
+            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
             self::RELATIVE_CLASS_NAME,
             self::TABLE_NAME,
             [

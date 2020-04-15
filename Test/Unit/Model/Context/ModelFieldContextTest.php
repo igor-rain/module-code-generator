@@ -106,6 +106,27 @@ class ModelFieldContextTest extends TestCase
         $this->assertEquals($phpType, self::createContext(self::FIELD_NAME, $type)->getPhpType());
     }
 
+    public function getGraphQlTypes(): array
+    {
+        return [
+            ['string', 'String'],
+            ['text', 'String'],
+            ['bool', 'Boolean'],
+            ['int', 'Int'],
+            ['float', 'Float']
+        ];
+    }
+
+    /**
+     * @dataProvider getGraphQlTypes
+     * @param string $type
+     * @param string $graphQlType
+     */
+    public function testGetGraphQlType(string $type, string $graphQlType): void
+    {
+        $this->assertEquals($graphQlType, self::createContext(self::FIELD_NAME, $type)->getGraphQlType());
+    }
+
     public static function createContext(string $name = self::FIELD_NAME, string $type = 'string'): ModelFieldContext
     {
         return new ModelFieldContext($name, $type);

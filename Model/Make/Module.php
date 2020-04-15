@@ -43,19 +43,29 @@ class Module
         $this->moduleXmlGenerator = $moduleXmlGenerator;
     }
 
-    public function make($moduleName): void
+    public function make($moduleNameWithoutSuffix): void
     {
-        $contextModule = $this->createModuleContext($moduleName);
+        $contextModule = $this->createModuleContext($moduleNameWithoutSuffix);
         $this->createModule($contextModule);
     }
 
-    public function makeWithApi($moduleName): void
+    public function makeWithApi($moduleNameWithoutSuffix): void
     {
-        $contextApi = $this->createModuleContext($moduleName . 'Api');
+        $contextApi = $this->createModuleContext($moduleNameWithoutSuffix . 'Api');
         $this->createModule($contextApi);
 
-        $contextModule = $this->createModuleContext($moduleName);
+        $contextModule = $this->createModuleContext($moduleNameWithoutSuffix);
         $contextModule->setDependencies([$contextApi]);
+        $this->createModule($contextModule);
+    }
+
+    public function makeGraphQl($moduleNameWithoutSuffix): void
+    {
+        $contextModule = $this->createModuleContext($moduleNameWithoutSuffix . 'GraphQl');
+        $contextModule->setDependencies([
+            $this->createModuleContext($moduleNameWithoutSuffix . 'Api'),
+            $this->createModuleContext('Magento_GraphQl')
+        ]);
         $this->createModule($contextModule);
     }
 

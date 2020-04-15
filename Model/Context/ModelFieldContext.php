@@ -16,11 +16,11 @@ class ModelFieldContext
         'float'
     ];
     /**
-     * @var null|string
+     * @var string
      */
     private $name;
     /**
-     * @var null|string
+     * @var string
      */
     private $type;
     /**
@@ -89,11 +89,22 @@ class ModelFieldContext
         return str_replace('Id', 'ID', ucwords(strtolower(str_replace('_', ' ', $this->getName()))));
     }
 
-    public function getPhpType()
+    public function getPhpType(): string
     {
         if ($this->type === 'text') {
             return 'string';
         }
         return $this->type;
+    }
+
+    public function getGraphQlType(): string
+    {
+        switch ($this->type) {
+            case 'text':
+                return 'String';
+            case 'bool':
+                return 'Boolean';
+        }
+        return ucfirst($this->type);
     }
 }

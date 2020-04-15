@@ -46,11 +46,18 @@ class Model extends Command
 
         $moduleContext = new ModuleContext($moduleName, $modulePath);
         $moduleApiContext = $moduleContext;
+        $moduleGraphQlContext = $moduleContext;
 
         $apiModuleName = $moduleName . 'Api';
         $apiModulePath = $locator->getModulePath($apiModuleName);
         if ($apiModulePath) {
             $moduleApiContext = new ModuleContext($apiModuleName, $apiModulePath);
+        }
+
+        $graphQlModuleName = $moduleName . 'GraphQl';
+        $graphQlModulePath = $locator->getModulePath($graphQlModuleName);
+        if ($graphQlModulePath) {
+            $moduleGraphQlContext = new ModuleContext($graphQlModuleName, $graphQlModulePath);
         }
 
         $classNameQuestion = new Question('Model name (e.g. Product): ');
@@ -83,6 +90,7 @@ class Model extends Command
         $context = new ModelContext(
             $moduleContext,
             $moduleApiContext,
+            $moduleGraphQlContext,
             $className,
             $tableName,
             $fields

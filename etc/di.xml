@@ -21,6 +21,7 @@
                 <item name="json" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\JsonSource</item>
                 <item name="text" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\TextSource</item>
                 <item name="php" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\PhpSource</item>
+                <item name="graphql" xsi:type="string">IgorRain\CodeGenerator\Model\ResourceModel\Source\GraphQlSource</item>
             </argument>
         </arguments>
     </type>

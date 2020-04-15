@@ -14,6 +14,9 @@ use IgorRain\CodeGenerator\Model\Generator\Etc\AclXmlGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Etc\DbSchemaXmlGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Etc\DiXmlGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Etc\WebapiXmlGenerator;
+use IgorRain\CodeGenerator\Model\Generator\GraphQl\ModelDataProviderGenerator;
+use IgorRain\CodeGenerator\Model\Generator\GraphQl\ModelResolverGenerator;
+use IgorRain\CodeGenerator\Model\Generator\GraphQl\SchemaGraphQlsGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Model\CollectionGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Model\ModelGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Model\RepositoryGenerator;
@@ -100,6 +103,18 @@ class Model
      * @var WebapiXmlGenerator
      */
     private $webapiXmlGenerator;
+    /**
+     * @var SchemaGraphQlsGenerator
+     */
+    private $schemaGraphQlsGenerator;
+    /**
+     * @var ModelDataProviderGenerator
+     */
+    private $modelDataProviderGenerator;
+    /**
+     * @var ModelResolverGenerator
+     */
+    private $modelResolverGenerator;
 
     public function __construct(
         ModelInterfaceGenerator $modelInterfaceGenerator,
@@ -119,7 +134,10 @@ class Model
         ModelRollbackIntegrationTestFixtureGenerator $modelRollbackIntegrationTestFixtureGenerator,
         RepositoryApiFunctionalTestGenerator $repositoryApiFunctionalTestGenerator,
         AclXmlGenerator $aclXmlGenerator,
-        WebapiXmlGenerator $webapiXmlGenerator
+        WebapiXmlGenerator $webapiXmlGenerator,
+        SchemaGraphQlsGenerator $schemaGraphQlsGenerator,
+        ModelDataProviderGenerator $modelDataProviderGenerator,
+        ModelResolverGenerator $modelResolverGenerator
     ) {
         $this->modelInterfaceGenerator = $modelInterfaceGenerator;
         $this->searchResultsInterfaceGenerator = $searchResultsInterfaceGenerator;
@@ -139,6 +157,9 @@ class Model
         $this->repositoryApiFunctionalTestGenerator = $repositoryApiFunctionalTestGenerator;
         $this->aclXmlGenerator = $aclXmlGenerator;
         $this->webapiXmlGenerator = $webapiXmlGenerator;
+        $this->schemaGraphQlsGenerator = $schemaGraphQlsGenerator;
+        $this->modelDataProviderGenerator = $modelDataProviderGenerator;
+        $this->modelResolverGenerator = $modelResolverGenerator;
     }
 
     /**
@@ -199,5 +220,14 @@ class Model
 
         $webapiXmlFilePath = $context->getModule()->getPath() . '/etc/webapi.xml';
         $this->webapiXmlGenerator->generateModelRoutes($webapiXmlFilePath, $context);
+
+        $schemaGraphQlsFilePath = $context->getGraphQlModule()->getPath() . '/etc/schema.graphqls';
+        $this->schemaGraphQlsGenerator->generateSchema($schemaGraphQlsFilePath, $context);
+
+        $modelDataProviderFilePath  = $context->getGraphQlModelDataProvider()->getAbsoluteFilePath();
+        $this->modelDataProviderGenerator->generate($modelDataProviderFilePath, $context);
+
+        $modelResolverFilePath  = $context->getGraphQlModelResolver()->getAbsoluteFilePath();
+        $this->modelResolverGenerator->generate($modelResolverFilePath, $context);
     }
 }

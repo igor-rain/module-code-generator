@@ -17,6 +17,10 @@ class ModelContext
      */
     private $apiModule;
     /**
+     * @var ModuleContext
+     */
+    private $graphQlModule;
+    /**
      * @var string
      */
     private $relativeClassName;
@@ -40,12 +44,14 @@ class ModelContext
     public function __construct(
         ModuleContext $module,
         ModuleContext $apiModule,
+        ModuleContext $graphQlModule,
         $relativeClassName,
         $tableName,
         $fields
     ) {
         $this->module = $module;
         $this->apiModule = $apiModule;
+        $this->graphQlModule = $graphQlModule;
         if (!$relativeClassName) {
             throw new \RuntimeException('Relative class name is empty');
         }
@@ -126,6 +132,11 @@ class ModelContext
         return $this->apiModule;
     }
 
+    public function getGraphQlModule(): ModuleContext
+    {
+        return $this->graphQlModule;
+    }
+
     public function getEventPrefixName(): string
     {
         [, $module] = explode('_', $this->module->getName());
@@ -195,6 +206,18 @@ class ModelContext
         return $this->getClassContext($this->module, 'Model\\ResourceModel\\'
             . str_replace('/', '\\', $this->getRelativeClassName())
             . '\\Collection');
+    }
+
+    public function getGraphQlModelResolver(): ClassContext
+    {
+        return $this->getClassContext($this->graphQlModule, 'Model\Resolver\\'
+            . str_replace('/', '\\', $this->getRelativeClassName()));
+    }
+
+    public function getGraphQlModelDataProvider(): ClassContext
+    {
+        return $this->getClassContext($this->graphQlModule, 'Model\Resolver\DataProvider\\'
+            . str_replace('/', '\\', $this->getRelativeClassName()));
     }
 
     public function getFixtureAbsolutePath($testType, $name): string

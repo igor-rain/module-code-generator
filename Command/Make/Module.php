@@ -41,5 +41,10 @@ class Module extends Command
         } else {
             $makeModule->make($moduleName);
         }
+
+        $graphQlQuestion = new ConfirmationQuestion('Create separated module for GraphQl? ', false);
+        if ($helper->ask($input, $output, $graphQlQuestion)) {
+            $makeModule->makeGraphQl($moduleName);
+        }
     }
 }

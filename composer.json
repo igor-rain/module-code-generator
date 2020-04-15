@@ -6,7 +6,8 @@
         "ext-dom": "*",
         "ext-json": "*",
         "magento/framework": "^102",
-        "nikic/php-parser": "^4"
+        "nikic/php-parser": "^4",
+        "webonyx/graphql-php": "*"
     },
     "type": "magento2-module",
     "license": [
