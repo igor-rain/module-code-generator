@@ -26,4 +26,13 @@ class Locator
 
         return $componentRegistrar->getPath('module', $moduleName);
     }
+
+    public function getExistingModuleNames(): array
+    {
+        $componentRegistrar = new ComponentRegistrar();
+
+        $names = array_keys($componentRegistrar->getPaths('module'));
+        sort($names);
+        return $names;
+    }
 }

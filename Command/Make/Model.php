@@ -9,6 +9,7 @@ namespace IgorRain\CodeGenerator\Command\Make;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModelContextBuilder;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModelFieldContextBuilder;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModuleContextBuilder;
+use IgorRain\CodeGenerator\Model\Locator;
 use IgorRain\CodeGenerator\Model\Make\Model as MakeModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -34,17 +35,23 @@ class Model extends Command
      * @var MakeModel
      */
     private $makeModel;
+    /**
+     * @var Locator
+     */
+    private $locator;
 
     public function __construct(
         ModelContextBuilder $modelContextBuilder,
         ModelFieldContextBuilder $modelFieldContextBuilder,
         ModuleContextBuilder $moduleContextBuilder,
-        MakeModel $makeModel
+        MakeModel $makeModel,
+        Locator $locator
     ) {
         $this->modelContextBuilder = $modelContextBuilder;
         $this->modelFieldContextBuilder = $modelFieldContextBuilder;
         $this->moduleContextBuilder = $moduleContextBuilder;
         $this->makeModel = $makeModel;
+        $this->locator = $locator;
         parent::__construct();
     }
 
@@ -81,6 +88,7 @@ class Model extends Command
         $helper = $this->getHelper('question');
 
         $moduleNameQuestion = new Question('Module name (e.g. Vendor_Module): ');
+        $moduleNameQuestion->setAutocompleterValues($this->locator->getExistingModuleNames());
         $moduleNameQuestion->setValidator(function ($value) {
             $this->moduleContextBuilder->setName((string)$value);
             $this->moduleContextBuilder->setPathAsExisting();

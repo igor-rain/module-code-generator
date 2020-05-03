@@ -47,7 +47,7 @@ class ModelContextBuilder
         if (!$name) {
             throw new \RuntimeException('Model name is empty');
         }
-        if (!preg_match('!^[A-Za-z0-9/\\\]+$!', $name)) {
+        if (!preg_match('!^[A-Z][A-Za-z0-9/\\\]+$!', $name)) {
             throw new \RuntimeException('Invalid model name ' . $name);
         }
 
