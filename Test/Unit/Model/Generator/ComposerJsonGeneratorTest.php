@@ -47,24 +47,20 @@ class ComposerJsonGeneratorTest extends TestCase
 
     protected function getContext(): ModuleContext
     {
-        $context = new ModuleContext('Vendor1_Module1', '/tmp/module');
+        $context1 = new ModuleContext('Vendor1_Module2', '/tmp/module', '0.0.1', []);
+        $context2 = new ModuleContext('Vendor1_Module3', '/tmp/module', '0.0.1', []);
 
-        $context1 = new ModuleContext('Vendor1_Module2', '/tmp/module');
-        $context2 = new ModuleContext('Vendor1_Module3', '/tmp/module');
-
-        $context->setDependencies([
+        return new ModuleContext('Vendor1_Module1', '/tmp/module', '0.0.1', [
             $context1,
             $context2,
         ]);
-
-        return $context;
     }
 
     protected function getExpectedContent(): string
     {
         return '{
     "name": "vendor1/module-module1",
-    "description": "Magento module responsible for Vendor1 Module1",
+    "description": "N/A",
     "require": {
         "php": "~7.1.3||~7.2.0||~7.3.0",
         "vendor1/module-module2": "~0.0.1",

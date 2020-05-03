@@ -19,26 +19,18 @@ class ModuleContext
     /**
      * @var string
      */
-    private $version = '0.0.1';
+    private $version;
     /**
      * @var ModuleContext[]
      */
-    private $dependencies = [];
+    private $dependencies;
 
-    public function __construct($name, $path)
+    public function __construct(string $name, string $path, string $version, array $dependencies)
     {
-        if (!$name) {
-            throw new \RuntimeException('Module name is empty');
-        }
-        if (!preg_match('!^[A-Z0-9][A-Za-z0-9]*_[A-Z0-9][A-Za-z0-9]*$!', $name)) {
-            throw new \RuntimeException('Invalid module name ' . $name);
-        }
         $this->name = $name;
-
-        if (!$path) {
-            throw new \RuntimeException('Module path is empty');
-        }
         $this->path = $path;
+        $this->version = $version;
+        $this->dependencies = $dependencies;
     }
 
     public function getName(): string
@@ -59,27 +51,14 @@ class ModuleContext
         return $this->dependencies;
     }
 
-    /**
-     * @param ModuleContext[] $dependencies
-     */
-    public function setDependencies(array $dependencies): void
-    {
-        $this->dependencies = $dependencies;
-    }
-
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    public function setVersion(string $version): void
-    {
-        $this->version = $version;
-    }
-
     public function getComposerPackage(): string
     {
-        return strtolower(str_replace('_', '/module', preg_replace('/(?<!^)[A-Z]/', '-$0', $this->name)));
+        return strtolower(str_replace('_', '/module', preg_replace('/(?<!^)[A-Z]+/', '-$0', $this->name)));
     }
 
     public function getPsr4Prefix(): string
@@ -89,6 +68,6 @@ class ModuleContext
 
     public function getDescription(): string
     {
-        return 'Magento module responsible for ' . str_replace('_', '', preg_replace('/(?<!^)[A-Z]/', ' $0', $this->name));
+        return 'N/A';
     }
 }

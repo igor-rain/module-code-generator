@@ -65,7 +65,7 @@ class SchemaGraphQlsGenerator
 
         $modelFields = $this->convertToArray($modelType->fields);
         foreach ($context->getFields() as $field) {
-            if ($field->getIsPrimary()) {
+            if ($field->isPrimary()) {
                 $fieldName = 'id';
                 $fieldDescription = ucfirst($context->getClassDescription()) . ' id';
             } else {

@@ -7,6 +7,7 @@
 namespace IgorRain\CodeGenerator\Test\Unit\Model\Context;
 
 use IgorRain\CodeGenerator\Model\Context\ModelContext;
+use IgorRain\CodeGenerator\Model\Context\ModelFieldContext;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,103 +16,12 @@ use PHPUnit\Framework\TestCase;
  */
 class ModelContextTest extends TestCase
 {
-    public const MODULE_NAME = 'Vendor1_Module1';
-    public const MODULE_API_NAME = 'Vendor1_Module1Api';
-    public const MODULE_GRAPH_QL_NAME = 'Vendor1_Module1GraphQl';
-    public const MODULE_PATH = '/tmp/module';
-    public const MODULE_API_PATH = '/tmp/module-api';
-    public const MODULE_GRAPH_QL_PATH = '/tmp/module-graph-ql';
-    public const RELATIVE_CLASS_NAME = 'Menu/Item';
+    public const MODEL_NAME = 'Menu/Item';
     public const TABLE_NAME = 'menu_item_entity';
 
-    public function testConstructWithEmptyRelativeClassName(): void
+    public function testGetName(): void
     {
-        $this->expectExceptionMessage('Relative class name is empty');
-
-        new ModelContext(
-            ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
-            ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
-            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
-            '',
-            self::TABLE_NAME,
-            []
-        );
-    }
-
-    public function testConstructWithEmptyTableName(): void
-    {
-        $this->expectExceptionMessage('Table name is empty');
-
-        new ModelContext(
-            ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
-            ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
-            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
-            self::RELATIVE_CLASS_NAME,
-            '',
-            []
-        );
-    }
-
-    public function testConstructWithoutPrimaryKey(): void
-    {
-        $this->expectExceptionMessage('Primary key is missing');
-
-        new ModelContext(
-            ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
-            ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
-            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
-            self::RELATIVE_CLASS_NAME,
-            self::TABLE_NAME,
-            [
-                ModelFieldContextTest::createContext('field1'),
-                ModelFieldContextTest::createContext('field2'),
-            ]
-        );
-    }
-
-    public function testConstructWithTwoPrimaryKeys(): void
-    {
-        $field1 = ModelFieldContextTest::createContext('field1');
-        $field1->setIsPrimary(true);
-
-        $field2 = ModelFieldContextTest::createContext('field2');
-        $field2->setIsPrimary(true);
-
-        $this->expectExceptionMessage('There should be only one primary key');
-
-        new ModelContext(
-            ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
-            ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
-            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
-            self::RELATIVE_CLASS_NAME,
-            self::TABLE_NAME,
-            [
-                $field1,
-                $field2,
-            ]
-        );
-    }
-
-    public function testConstructWithInvalidFields(): void
-    {
-        $this->expectExceptionMessage('Each field should be an instance of ModelFieldContext');
-
-        new ModelContext(
-            ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
-            ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
-            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
-            self::RELATIVE_CLASS_NAME,
-            self::TABLE_NAME,
-            [
-                '111',
-                '222',
-            ]
-        );
-    }
-
-    public function testGetRelativeClassName(): void
-    {
-        $this->assertEquals(self::RELATIVE_CLASS_NAME, self::createContext()->getRelativeClassName());
+        $this->assertEquals(self::MODEL_NAME, self::createContext()->getName());
     }
 
     public function testGetClassDescription(): void
@@ -136,8 +46,7 @@ class ModelContextTest extends TestCase
 
     public function testGetPrimaryKey(): void
     {
-        $primaryKey = self::createContext()->getPrimaryKey();
-        $this->assertEquals('entity_id', $primaryKey->getName());
+        $this->assertEquals('entity_id', self::createContext()->getPrimaryKey()->getName());
     }
 
     public function testGetFields(): void
@@ -160,17 +69,17 @@ class ModelContextTest extends TestCase
 
     public function testGetModule(): void
     {
-        $this->assertEquals(self::MODULE_NAME, self::createContext()->getModule()->getName());
+        $this->assertEquals(ModuleContextTest::MODULE_NAME, self::createContext()->getModule()->getName());
     }
 
     public function testGetApiModule(): void
     {
-        $this->assertEquals(self::MODULE_API_NAME, self::createContext()->getApiModule()->getName());
+        $this->assertEquals(ModuleContextTest::MODULE_API_NAME, self::createContext()->getApiModule()->getName());
     }
 
     public function testGetGraphQlModule(): void
     {
-        $this->assertEquals(self::MODULE_GRAPH_QL_NAME, self::createContext()->getGraphQlModule()->getName());
+        $this->assertEquals(ModuleContextTest::MODULE_GRAPH_QL_NAME, self::createContext()->getGraphQlModule()->getName());
     }
 
     public function testGetEventPrefixName(): void
@@ -240,7 +149,7 @@ class ModelContextTest extends TestCase
 
     public function testGetFixtureAbsolutePath(): void
     {
-        $this->assertEquals(self::MODULE_PATH . '/Test/Integration/_files/menu_item.php', self::createContext()->getFixtureAbsolutePath('Integration', 'menu_item'));
+        $this->assertEquals(ModuleContextTest::MODULE_PATH . '/Test/Integration/_files/menu_item.php', self::createContext()->getFixtureAbsolutePath('Integration', 'menu_item'));
     }
 
     public function testGetFixtureRelativePath(): void
@@ -253,23 +162,20 @@ class ModelContextTest extends TestCase
      */
     public static function createContext(): ModelContext
     {
-        $primaryKey = ModelFieldContextTest::createContext('entity_id', 'int');
-        $primaryKey->setIsPrimary(true);
-
         return new ModelContext(
-            ModuleContextTest::createContext(self::MODULE_NAME, self::MODULE_PATH),
-            ModuleContextTest::createContext(self::MODULE_API_NAME, self::MODULE_API_PATH),
-            ModuleContextTest::createContext(self::MODULE_GRAPH_QL_NAME, self::MODULE_GRAPH_QL_PATH),
-            self::RELATIVE_CLASS_NAME,
+            ModuleContextTest::createContext(),
+            ModuleContextTest::createApiContext(),
+            ModuleContextTest::createGraphQlContext(),
+            self::MODEL_NAME,
             self::TABLE_NAME,
             [
-                $primaryKey,
-                ModelFieldContextTest::createContext('sku', 'string'),
-                ModelFieldContextTest::createContext('name', 'string'),
-                ModelFieldContextTest::createContext('description', 'text'),
-                ModelFieldContextTest::createContext('price', 'float'),
-                ModelFieldContextTest::createContext('attribute_set_id', 'int'),
-                ModelFieldContextTest::createContext('is_visible', 'bool'),
+                new ModelFieldContext('entity_id', 'int', true),
+                new ModelFieldContext('sku', 'string', false),
+                new ModelFieldContext('name', 'string', false),
+                new ModelFieldContext('description', 'text', false),
+                new ModelFieldContext('price', 'float', false),
+                new ModelFieldContext('attribute_set_id', 'int', false),
+                new ModelFieldContext('is_visible', 'bool', false),
             ]
         );
     }

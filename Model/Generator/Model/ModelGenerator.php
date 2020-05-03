@@ -72,7 +72,7 @@ class ModelGenerator
         $class->addStmt($construct);
 
         foreach ($context->getFields() as $field) {
-            if ($field->getIsPrimary()) {
+            if ($field->isPrimary()) {
                 $getMethod = $factory->method('getId')
                     ->makePublic()
                     ->setReturnType(new Node\NullableType($field->getPhpType()))

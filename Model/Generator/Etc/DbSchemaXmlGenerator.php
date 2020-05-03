@@ -62,7 +62,7 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
             $column = $table->ownerDocument->createElement('column');
             $this->setColumnAttributes($column, $context);
 
-            if ($context->getIsPrimary()) {
+            if ($context->isPrimary()) {
                 $table->insertBefore($column, $table->firstChild);
             } else {
                 $lastColumn = $this->getLastChildByTagName($table, 'column');
@@ -106,7 +106,7 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
                 break;
         }
 
-        if ($context->getIsPrimary()) {
+        if ($context->isPrimary()) {
             if ($context->getType() === 'int') {
                 $column->setAttribute('unsigned', 'true');
                 $column->setAttribute('identity', 'true');

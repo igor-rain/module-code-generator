@@ -20,7 +20,7 @@ class Locator
         return BP . '/app/code/' . implode('/', $parts);
     }
 
-    public function getModulePath(string $moduleName): ?string
+    public function getExistingModulePath(string $moduleName): ?string
     {
         $componentRegistrar = new ComponentRegistrar();
 

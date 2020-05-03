@@ -6,11 +6,10 @@
 
 namespace IgorRain\CodeGenerator\Command\Make;
 
-use IgorRain\CodeGenerator\Model\Context\ModelContext;
-use IgorRain\CodeGenerator\Model\Context\ModelFieldContext;
-use IgorRain\CodeGenerator\Model\Context\ModuleContext;
-use IgorRain\CodeGenerator\Model\Locator;
-use Magento\Framework\App\ObjectManager;
+use IgorRain\CodeGenerator\Model\Context\Builder\ModelContextBuilder;
+use IgorRain\CodeGenerator\Model\Context\Builder\ModelFieldContextBuilder;
+use IgorRain\CodeGenerator\Model\Context\Builder\ModuleContextBuilder;
+use IgorRain\CodeGenerator\Model\Make\Model as MakeModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,6 +18,35 @@ use Symfony\Component\Console\Question\Question;
 class Model extends Command
 {
     public const NAME = 'dev:make:model';
+    /**
+     * @var ModelContextBuilder
+     */
+    private $modelContextBuilder;
+    /**
+     * @var ModelFieldContextBuilder
+     */
+    private $modelFieldContextBuilder;
+    /**
+     * @var ModuleContextBuilder
+     */
+    private $moduleContextBuilder;
+    /**
+     * @var MakeModel
+     */
+    private $makeModel;
+
+    public function __construct(
+        ModelContextBuilder $modelContextBuilder,
+        ModelFieldContextBuilder $modelFieldContextBuilder,
+        ModuleContextBuilder $moduleContextBuilder,
+        MakeModel $makeModel
+    ) {
+        $this->modelContextBuilder = $modelContextBuilder;
+        $this->modelFieldContextBuilder = $modelFieldContextBuilder;
+        $this->moduleContextBuilder = $moduleContextBuilder;
+        $this->makeModel = $makeModel;
+        parent::__construct();
+    }
 
     protected function configure(): void
     {
@@ -30,75 +58,112 @@ class Model extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $objectManager = ObjectManager::getInstance();
-        /** @var Locator $locator */
-        $locator = $objectManager->get(Locator::class);
+        $helper = $this->getHelper('question');
 
+        $this->askModule($input, $output);
+        $this->askModelName($input, $output);
+        $this->askTableName($input, $output);
+
+        $this->askField($input, $output, 'Primary key', true);
+
+        for ($fieldIndex = 1;; ++$fieldIndex) {
+            if (!$this->askField($input, $output, 'Field #' . $fieldIndex, false)) {
+                break;
+            }
+        }
+
+        $context = $this->modelContextBuilder->build();
+        $this->makeModel->make($context);
+    }
+
+    protected function askModule(InputInterface $input, OutputInterface $output): void
+    {
         $helper = $this->getHelper('question');
 
         $moduleNameQuestion = new Question('Module name (e.g. Vendor_Module): ');
-        $moduleName = $helper->ask($input, $output, $moduleNameQuestion);
+        $moduleNameQuestion->setValidator(function ($value) {
+            $this->moduleContextBuilder->setName((string)$value);
+            $this->moduleContextBuilder->setPathAsExisting();
+        });
+        $helper->ask($input, $output, $moduleNameQuestion);
 
-        $modulePath = $locator->getModulePath($moduleName);
-        if (!$modulePath) {
-            throw new \RuntimeException('Module not found ' . $moduleName);
+        $moduleName = $this->moduleContextBuilder->getName();
+        $module = $this->moduleContextBuilder->build();
+
+        $this->modelContextBuilder->setModule($module);
+
+        try {
+            $apiModule = $this->moduleContextBuilder
+                ->setName($moduleName . 'Api')
+                ->setPathAsExisting()
+                ->build();
+            $this->modelContextBuilder->setApiModule($apiModule);
+        } catch (\RuntimeException $exception) {
         }
 
-        $moduleContext = new ModuleContext($moduleName, $modulePath);
-        $moduleApiContext = $moduleContext;
-        $moduleGraphQlContext = $moduleContext;
-
-        $apiModuleName = $moduleName . 'Api';
-        $apiModulePath = $locator->getModulePath($apiModuleName);
-        if ($apiModulePath) {
-            $moduleApiContext = new ModuleContext($apiModuleName, $apiModulePath);
+        try {
+            $graphQlModule = $this->moduleContextBuilder
+                ->setName($moduleName . 'GraphQl')
+                ->setPathAsExisting()
+                ->build();
+            $this->modelContextBuilder->setGraphQlModule($graphQlModule);
+        } catch (\RuntimeException $exception) {
         }
+    }
 
-        $graphQlModuleName = $moduleName . 'GraphQl';
-        $graphQlModulePath = $locator->getModulePath($graphQlModuleName);
-        if ($graphQlModulePath) {
-            $moduleGraphQlContext = new ModuleContext($graphQlModuleName, $graphQlModulePath);
-        }
+    protected function askModelName(InputInterface $input, OutputInterface $output): void
+    {
+        $helper = $this->getHelper('question');
 
-        $classNameQuestion = new Question('Model name (e.g. Product): ');
-        $className = $helper->ask($input, $output, $classNameQuestion);
+        $modelNameQuestion = new Question('Model name (e.g. Product): ');
+        $modelNameQuestion->setValidator(function ($value) {
+            $this->modelContextBuilder->setName((string)$value);
+        });
+        $helper->ask($input, $output, $modelNameQuestion);
+    }
+
+    protected function askTableName(InputInterface $input, OutputInterface $output): void
+    {
+        $helper = $this->getHelper('question');
 
         $tableNameQuestion = new Question('Table name (e.g. catalog_product_entity): ');
-        $tableName = $helper->ask($input, $output, $tableNameQuestion);
+        $tableNameQuestion->setValidator(function ($value) {
+            $this->modelContextBuilder->setTableName((string)$value);
+        });
+        $helper->ask($input, $output, $tableNameQuestion);
+    }
 
-        $fields = [];
+    protected function askField(
+        InputInterface $input,
+        OutputInterface $output,
+        string $questionPrefix,
+        bool $isPrimary
+    ): bool {
+        $helper = $this->getHelper('question');
 
-        $primaryKeyDefault = 'entity_id';
-        $primaryKeyQuestion = new Question('Primary key (default is ' . $primaryKeyDefault . '): ', $primaryKeyDefault);
-        $primaryKey = $helper->ask($input, $output, $primaryKeyQuestion);
-        $primaryKeyField = new ModelFieldContext($primaryKey, 'int');
-        $primaryKeyField->setIsPrimary(true);
-        $fields[] = $primaryKeyField;
-
-        for ($fieldIndex = 1;; ++$fieldIndex) {
-            $fieldNameQuestion = new Question('Field #' . $fieldIndex . ' name: ');
-            $fieldName = $helper->ask($input, $output, $fieldNameQuestion);
-            if (!$fieldName) {
-                break;
+        $fieldNameQuestion = new Question($questionPrefix . ' name: ');
+        $fieldNameQuestion->setValidator(function ($value) {
+            if ($value) {
+                $this->modelFieldContextBuilder->setName((string)$value);
             }
-
-            $fieldTypeQuestion = new Question('Field #' . $fieldIndex . ' type: ');
-            $fieldType = $helper->ask($input, $output, $fieldTypeQuestion);
-            $fields[] = new ModelFieldContext($fieldName, $fieldType);
+            return $value;
+        });
+        $fieldName = $helper->ask($input, $output, $fieldNameQuestion);
+        if (!$fieldName) {
+            return false;
         }
 
-        $context = new ModelContext(
-            $moduleContext,
-            $moduleApiContext,
-            $moduleGraphQlContext,
-            $className,
-            $tableName,
-            $fields
-        );
+        $fieldTypeQuestion = new Question($questionPrefix . ' type: ');
+        $fieldTypeQuestion->setValidator(function ($value) {
+            $this->modelFieldContextBuilder->setType((string)$value);
+        });
+        $helper->ask($input, $output, $fieldTypeQuestion);
 
-        $objectManager = ObjectManager::getInstance();
-        $makeModel = $objectManager->get(\IgorRain\CodeGenerator\Model\Make\Model::class);
+        $this->modelFieldContextBuilder->setIsPrimary($isPrimary);
 
-        $makeModel->make($context);
+        $field = $this->modelFieldContextBuilder->build();
+        $this->modelContextBuilder->addField($field);
+
+        return true;
     }
 }

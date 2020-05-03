@@ -41,7 +41,7 @@ class ModelInterfaceGenerator
             */');
 
         foreach ($context->getFields() as $field) {
-            if (!$field->getIsPrimary()) {
+            if (!$field->isPrimary()) {
                 $interface->addStmt(new Node\Stmt\ClassConst([
                     new Node\Const_($field->getConstantName(), new Node\Scalar\String_($field->getName())),
                 ], Node\Stmt\Class_::MODIFIER_PUBLIC));
@@ -49,7 +49,7 @@ class ModelInterfaceGenerator
         }
 
         foreach ($context->getFields() as $field) {
-            if ($field->getIsPrimary()) {
+            if ($field->isPrimary()) {
                 $getMethod = $factory->method('getId')
                     ->makePublic()
                     ->setReturnType(new Node\NullableType($field->getPhpType()))

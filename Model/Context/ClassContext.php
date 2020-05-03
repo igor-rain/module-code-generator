@@ -17,14 +17,9 @@ class ClassContext
      */
     private $className;
 
-    public function __construct(
-        ModuleContext $module,
-        $className
-    ) {
+    public function __construct(ModuleContext $module, string $className)
+    {
         $this->module = $module;
-        if (!$className) {
-            throw new \RuntimeException('Class name is empty');
-        }
         $this->className = $className;
     }
 

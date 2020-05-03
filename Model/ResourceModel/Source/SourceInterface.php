@@ -8,6 +8,8 @@ namespace IgorRain\CodeGenerator\Model\ResourceModel\Source;
 
 interface SourceInterface
 {
+    public function __construct($fileName);
+
     public function exists(): bool;
 
     public function load(): void;

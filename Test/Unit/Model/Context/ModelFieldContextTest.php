@@ -17,45 +17,21 @@ class ModelFieldContextTest extends TestCase
 {
     public const FIELD_NAME = 'attribute_set_id';
     public const FIELD_TYPE = 'string';
-
-    public function testConstructWithEmptyName(): void
-    {
-        $this->expectExceptionMessage('Field name is empty');
-        new ModelFieldContext('', 'string');
-    }
-
-    public function testConstructWithInvalidName(): void
-    {
-        $this->expectExceptionMessage('Invalid field name Test');
-        new ModelFieldContext('Test', 'string');
-    }
-
-    public function testConstructWithUnknownType(): void
-    {
-        $this->expectExceptionMessage('Unknown field type test');
-        new ModelFieldContext('menu_id', 'test');
-    }
+    public const IS_PRIMARY = false;
 
     public function testGetName(): void
     {
-        $this->assertEquals('attribute_set_id', self::createContext()->getName());
+        $this->assertEquals(self::FIELD_NAME, self::createContext()->getName());
     }
 
     public function testGetType(): void
     {
-        $this->assertEquals('string', self::createContext()->getType());
+        $this->assertEquals(self::FIELD_TYPE, self::createContext()->getType());
     }
 
-    public function testGetIsPrimary(): void
+    public function testIsPrimary(): void
     {
-        $this->assertFalse(self::createContext()->getIsPrimary());
-    }
-
-    public function testSetIsPrimary(): void
-    {
-        $context = self::createContext();
-        $context->setIsPrimary(true);
-        $this->assertTrue($context->getIsPrimary());
+        $this->assertEquals(self::IS_PRIMARY, self::createContext()->isPrimary());
     }
 
     public function testGetConstantName(): void
@@ -103,7 +79,12 @@ class ModelFieldContextTest extends TestCase
      */
     public function testGetPhpType(string $type, string $phpType): void
     {
-        $this->assertEquals($phpType, self::createContext(self::FIELD_NAME, $type)->getPhpType());
+        $context = new ModelFieldContext(
+            self::FIELD_NAME,
+            $type,
+            self::IS_PRIMARY
+        );
+        $this->assertEquals($phpType, $context->getPhpType());
     }
 
     public function getGraphQlTypes(): array
@@ -124,11 +105,20 @@ class ModelFieldContextTest extends TestCase
      */
     public function testGetGraphQlType(string $type, string $graphQlType): void
     {
-        $this->assertEquals($graphQlType, self::createContext(self::FIELD_NAME, $type)->getGraphQlType());
+        $context = new ModelFieldContext(
+            self::FIELD_NAME,
+            $type,
+            self::IS_PRIMARY
+        );
+        $this->assertEquals($graphQlType, $context->getGraphQlType());
     }
 
-    public static function createContext(string $name = self::FIELD_NAME, string $type = 'string'): ModelFieldContext
+    public static function createContext(): ModelFieldContext
     {
-        return new ModelFieldContext($name, $type);
+        return new ModelFieldContext(
+            self::FIELD_NAME,
+            self::FIELD_TYPE,
+            self::IS_PRIMARY
+        );
     }
 }

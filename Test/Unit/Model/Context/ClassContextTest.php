@@ -7,7 +7,6 @@
 namespace IgorRain\CodeGenerator\Test\Unit\Model\Context;
 
 use IgorRain\CodeGenerator\Model\Context\ClassContext;
-use IgorRain\CodeGenerator\Model\Context\ModuleContext;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -16,17 +15,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ClassContextTest extends TestCase
 {
-    public const MODULE_NAME = 'Vendor1_Module1Api';
-
-    public const MODULE_PATH = '/tmp/module';
-
     public const CLASS_NAME = 'Vendor1\\Module1Api\\Api\\Menu\\ItemRepositoryInterface';
-
-    public function testConstructWithEmptyClassName(): void
-    {
-        $this->expectExceptionMessage('Class name is empty');
-        self::createContext('');
-    }
 
     public function testGetName(): void
     {
@@ -45,7 +34,7 @@ class ClassContextTest extends TestCase
 
     public function testGetAbsoluteFilePath(): void
     {
-        $this->assertEquals(self::MODULE_PATH . '/Api/Menu/ItemRepositoryInterface.php', self::createContext()->getAbsoluteFilePath());
+        $this->assertEquals(ModuleContextTest::MODULE_API_PATH . '/Api/Menu/ItemRepositoryInterface.php', self::createContext()->getAbsoluteFilePath());
     }
 
     public function testGetUnitTest(): void
@@ -68,15 +57,8 @@ class ClassContextTest extends TestCase
         $this->assertEquals('vendor1Module1ApiMenuItemRepositoryV1', self::createContext()->getMagentoServiceName());
     }
 
-    /**
-     * @param string $className
-     *
-     * @return ClassContext
-     */
-    public static function createContext($className = self::CLASS_NAME): ClassContext
+    public static function createContext(): ClassContext
     {
-        $moduleContext = new ModuleContext(self::MODULE_NAME, self::MODULE_PATH);
-
-        return new ClassContext($moduleContext, $className);
+        return new ClassContext(ModuleContextTest::createApiContext(), self::CLASS_NAME);
     }
 }

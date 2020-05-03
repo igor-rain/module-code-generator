@@ -10,14 +10,9 @@ use IgorRain\CodeGenerator\Model\Context\ModuleContext;
 use IgorRain\CodeGenerator\Model\Generator\ComposerJsonGenerator;
 use IgorRain\CodeGenerator\Model\Generator\Etc\ModuleXmlGenerator;
 use IgorRain\CodeGenerator\Model\Generator\RegistrationPhpGenerator;
-use IgorRain\CodeGenerator\Model\Locator;
 
 class Module
 {
-    /**
-     * @var Locator
-     */
-    private $locator;
     /**
      * @var ComposerJsonGenerator
      */
@@ -32,51 +27,16 @@ class Module
     private $moduleXmlGenerator;
 
     public function __construct(
-        Locator $locator,
         ComposerJsonGenerator $composerJsonGenerator,
         RegistrationPhpGenerator $registrationPhpGenerator,
         ModuleXmlGenerator $moduleXmlGenerator
     ) {
-        $this->locator = $locator;
         $this->composerJsonGenerator = $composerJsonGenerator;
         $this->registrationPhpGenerator = $registrationPhpGenerator;
         $this->moduleXmlGenerator = $moduleXmlGenerator;
     }
 
-    public function make($moduleNameWithoutSuffix): void
-    {
-        $contextModule = $this->createModuleContext($moduleNameWithoutSuffix);
-        $this->createModule($contextModule);
-    }
-
-    public function makeWithApi($moduleNameWithoutSuffix): void
-    {
-        $contextApi = $this->createModuleContext($moduleNameWithoutSuffix . 'Api');
-        $this->createModule($contextApi);
-
-        $contextModule = $this->createModuleContext($moduleNameWithoutSuffix);
-        $contextModule->setDependencies([$contextApi]);
-        $this->createModule($contextModule);
-    }
-
-    public function makeGraphQl($moduleNameWithoutSuffix): void
-    {
-        $contextModule = $this->createModuleContext($moduleNameWithoutSuffix . 'GraphQl');
-        $contextModule->setDependencies([
-            $this->createModuleContext($moduleNameWithoutSuffix . 'Api'),
-            $this->createModuleContext('Magento_GraphQl')
-        ]);
-        $this->createModule($contextModule);
-    }
-
-    protected function createModuleContext($moduleName): ModuleContext
-    {
-        $modulePath = $this->locator->getNewModulePath($moduleName);
-
-        return new ModuleContext($moduleName, $modulePath);
-    }
-
-    protected function createModule(ModuleContext $context): void
+    public function make(ModuleContext $context): void
     {
         $this->composerJsonGenerator->generate($context->getPath() . '/composer.json', $context);
         $this->registrationPhpGenerator->generate($context->getPath() . '/registration.php', $context);

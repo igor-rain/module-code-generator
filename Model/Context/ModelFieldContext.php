@@ -26,22 +26,13 @@ class ModelFieldContext
     /**
      * @var bool
      */
-    private $isPrimary = false;
+    private $isPrimary;
 
-    public function __construct($name, $type)
+    public function __construct(string $name, string $type, bool $isPrimary)
     {
-        if (!$name) {
-            throw new \RuntimeException('Field name is empty');
-        }
-        if (!preg_match('!^[a-z0-9_]*$!', $name)) {
-            throw new \RuntimeException('Invalid field name ' . $name);
-        }
         $this->name = $name;
-
-        if (!in_array($type, self::TYPES, true)) {
-            throw new \RuntimeException('Unknown field type ' . $type);
-        }
         $this->type = $type;
+        $this->isPrimary = $isPrimary;
     }
 
     public function getName(): string
@@ -54,14 +45,9 @@ class ModelFieldContext
         return $this->type;
     }
 
-    public function getIsPrimary(): bool
+    public function isPrimary(): bool
     {
         return $this->isPrimary;
-    }
-
-    public function setIsPrimary(bool $isPrimary): void
-    {
-        $this->isPrimary = $isPrimary;
     }
 
     public function getConstantName(): string

@@ -50,7 +50,7 @@ class ModelDataProviderGenerator
         $code = '';
         foreach ($context->getFields() as $field) {
             $code .= '            ';
-            if ($field->getIsPrimary()) {
+            if ($field->isPrimary()) {
                 $code .= '\'id\' => $' . $context->getVariableName() . '->getId()';
             } else {
                 $code .= $context->getModelInterface()->getShortName()

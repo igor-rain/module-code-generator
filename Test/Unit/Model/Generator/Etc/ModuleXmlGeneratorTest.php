@@ -47,17 +47,13 @@ class ModuleXmlGeneratorTest extends TestCase
 
     protected function getContext(): ModuleContext
     {
-        $context = new ModuleContext('Vendor1_Module1', '/tmp/module');
+        $context1 = new ModuleContext('Vendor1_Module2', '/tmp/module', '0.0.1', []);
+        $context2 = new ModuleContext('Vendor1_Module3', '/tmp/module', '0.0.1', []);
 
-        $context1 = new ModuleContext('Vendor1_Module2', '/tmp/module');
-        $context2 = new ModuleContext('Vendor1_Module3', '/tmp/module');
-
-        $context->setDependencies([
+        return new ModuleContext('Vendor1_Module1', '/tmp/module', '0.0.1', [
             $context1,
             $context2,
         ]);
-
-        return $context;
     }
 
     protected function getExpectedContent(): string
