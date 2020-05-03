@@ -50,7 +50,7 @@ class Model extends Command
 
     protected function configure(): void
     {
-        $this->setName(self::NAME)
+        $this->setName(static::NAME)
             ->setDescription(
                 'Generate model'
             );
