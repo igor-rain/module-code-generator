@@ -6,11 +6,11 @@
 
 namespace IgorRain\CodeGenerator\Command\Make;
 
+use IgorRain\CodeGenerator\Model\Command\QuestionFactory;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModelContextBuilder;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModelFieldContextBuilder;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModuleContextBuilder;
 use IgorRain\CodeGenerator\Model\Context\ModelFieldContext;
-use IgorRain\CodeGenerator\Model\Locator;
 use IgorRain\CodeGenerator\Model\Make\Model as MakeModel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -37,37 +37,33 @@ class Model extends Command
      */
     private $makeModel;
     /**
-     * @var Locator
+     * @var QuestionFactory
      */
-    private $locator;
+    private $questionFactory;
 
     public function __construct(
         ModelContextBuilder $modelContextBuilder,
         ModelFieldContextBuilder $modelFieldContextBuilder,
         ModuleContextBuilder $moduleContextBuilder,
         MakeModel $makeModel,
-        Locator $locator
+        QuestionFactory $questionFactory
     ) {
+        parent::__construct();
         $this->modelContextBuilder = $modelContextBuilder;
         $this->modelFieldContextBuilder = $modelFieldContextBuilder;
         $this->moduleContextBuilder = $moduleContextBuilder;
         $this->makeModel = $makeModel;
-        $this->locator = $locator;
-        parent::__construct();
+        $this->questionFactory = $questionFactory;
     }
 
     protected function configure(): void
     {
         $this->setName(static::NAME)
-            ->setDescription(
-                'Generate model'
-            );
+            ->setDescription('Generate model');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-
         $this->askModule($input, $output);
         $this->askModelName($input, $output);
         $this->askTableName($input, $output);
@@ -88,15 +84,8 @@ class Model extends Command
     {
         $helper = $this->getHelper('question');
 
-        $moduleNameQuestion = new Question('Module name (e.g. Vendor_Module): ');
-        $moduleNameQuestion->setAutocompleterValues($this->locator->getExistingModuleNames());
-        $moduleNameQuestion->setValidator(function ($value) {
-            $this->moduleContextBuilder->setName((string)$value);
-            $this->moduleContextBuilder->setPathAsExisting();
-        });
-        $helper->ask($input, $output, $moduleNameQuestion);
-
-        $moduleName = $this->moduleContextBuilder->getName();
+        $moduleNameQuestion = $this->questionFactory->createExistingModuleNameQuestion($this->moduleContextBuilder);
+        $moduleName = $helper->ask($input, $output, $moduleNameQuestion);
         $module = $this->moduleContextBuilder->build();
 
         $this->modelContextBuilder->setModule($module);
@@ -124,10 +113,7 @@ class Model extends Command
     {
         $helper = $this->getHelper('question');
 
-        $modelNameQuestion = new Question('Model name (e.g. Product): ');
-        $modelNameQuestion->setValidator(function ($value) {
-            $this->modelContextBuilder->setName((string)$value);
-        });
+        $modelNameQuestion = $this->questionFactory->getModelNameQuestion($this->modelContextBuilder);
         $helper->ask($input, $output, $modelNameQuestion);
     }
 
@@ -135,10 +121,7 @@ class Model extends Command
     {
         $helper = $this->getHelper('question');
 
-        $tableNameQuestion = new Question('Table name (e.g. catalog_product_entity): ');
-        $tableNameQuestion->setValidator(function ($value) {
-            $this->modelContextBuilder->setTableName((string)$value);
-        });
+        $tableNameQuestion = $this->questionFactory->getTableNameQuestion($this->modelContextBuilder);
         $helper->ask($input, $output, $tableNameQuestion);
     }
 

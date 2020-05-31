@@ -10,6 +10,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="devMakeModule" xsi:type="object">IgorRain\CodeGenerator\Command\Make\Module</item>
+                <item name="devMakeModules" xsi:type="object">IgorRain\CodeGenerator\Command\Make\Modules</item>
                 <item name="devMakeModel" xsi:type="object">IgorRain\CodeGenerator\Command\Make\Model</item>
             </argument>
         </arguments>

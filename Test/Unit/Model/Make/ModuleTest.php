@@ -23,7 +23,7 @@ class ModuleTest extends TestCase
     /**
      * @var Module
      */
-    private $makeModel;
+    private $makeModule;
     /**
      * @var array
      */
@@ -36,7 +36,7 @@ class ModuleTest extends TestCase
         foreach ($constructor->getParameters() as $parameter) {
             $this->parameters[$parameter->getName()] = $this->createMock($parameter->getType()->getName());
         }
-        $this->makeModel = $class->newInstanceArgs($this->parameters);
+        $this->makeModule = $class->newInstanceArgs($this->parameters);
     }
 
     public function testMake(): void
@@ -56,7 +56,7 @@ class ModuleTest extends TestCase
             $context
         ]);
 
-        $this->makeModel->make($context);
+        $this->makeModule->make($context);
         $this->assertSameSize($this->parameters, $this->checkedGenerators);
     }
 
