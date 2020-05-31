@@ -53,7 +53,6 @@ class ModuleTest extends TestCase
         $application->add($this->moduleCommand);
     }
 
-
     public function testName(): void
     {
         $this->assertEquals('dev:make:module', $this->moduleCommand->getName());
