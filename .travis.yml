@@ -1,23 +1,10 @@
-sudo: required
 dist: trusty
 group: edge
-addons:
-    apt:
-        packages:
-            - mysql-server-5.6
-            - mysql-client-core-5.6
-            - mysql-client-5.6
-            - postfix
-    firefox: "46.0"
-    hosts:
-        - magento2.travis
-services:
-    - rabbitmq
-    - elasticsearch
 language: php
 php:
     - 7.1
     - 7.2
+    - 7.3
 env:
     global:
         - COMPOSER_BIN_DIR=~/bin
@@ -27,9 +14,8 @@ env:
         - COMPOSER_MODULE=igor-rain/module-code-generator
         - TEST_FILTER=vendor/$COMPOSER_MODULE
     matrix:
-        - MAGENTO_VERSION=2.3.4 TEST_SUITE=unit
+        - MAGENTO_VERSION=2.3.5 TEST_SUITE=unit
 cache:
-    apt: true
     directories:
         - $HOME/.composer/cache
         - $HOME/.nvm
@@ -45,11 +31,4 @@ before_script:
     - chmod +x ./dev/travis/before_script.sh
     - ./dev/travis/before_script.sh
 script:
-    # Set arguments for variants of phpunit based tests; '|| true' prevents failing script when leading test fails
-    - test $TEST_SUITE = "functional" && TEST_FILTER='dev/tests/functional/testsuites/Magento/Mtf/TestSuite/InjectableTests.php' || true
-
-    # The scripts for grunt/phpunit type tests
-    - if [ $TEST_SUITE == "functional" ]; then dev/tests/functional/vendor/phpunit/phpunit/phpunit -c dev/tests/$TEST_SUITE $TEST_FILTER; fi
-    - if [ $TEST_SUITE != "functional" ] && [ $TEST_SUITE != "js" ] && [ $TEST_SUITE != "graphql-api-functional" ]; then phpunit -c dev/tests/$TEST_SUITE $TEST_FILTER; fi
-    - if [ $TEST_SUITE == "js" ]; then grunt $GRUNT_COMMAND; fi
-    - if [ $TEST_SUITE == "graphql-api-functional" ]; then phpunit -c dev/tests/api-functional; fi
+    - phpunit -c dev/tests/$TEST_SUITE $TEST_FILTER;
