@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\AclXmlGenerator
+ * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\AbstractXmlGenerator
  */
 class AclXmlGeneratorTest extends TestCase
 {

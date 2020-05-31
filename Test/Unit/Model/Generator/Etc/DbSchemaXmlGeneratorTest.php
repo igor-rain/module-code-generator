@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\DbSchemaXmlGenerator
+ * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\AbstractXmlGenerator
  */
 class DbSchemaXmlGeneratorTest extends TestCase
 {

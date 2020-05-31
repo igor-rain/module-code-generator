@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\DiXmlGenerator
+ * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\AbstractXmlGenerator
  */
 class DiXmlGeneratorTest extends TestCase
 {

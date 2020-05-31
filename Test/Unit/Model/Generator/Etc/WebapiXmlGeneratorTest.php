@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\WebapiXmlGenerator
+ * @covers \IgorRain\CodeGenerator\Model\Generator\Etc\AbstractXmlGenerator
  */
 class WebapiXmlGeneratorTest extends TestCase
 {

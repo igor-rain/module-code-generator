@@ -9,7 +9,6 @@ namespace IgorRain\CodeGenerator\Command\Make;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModelContextBuilder;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModelFieldContextBuilder;
 use IgorRain\CodeGenerator\Model\Context\Builder\ModuleContextBuilder;
-use IgorRain\CodeGenerator\Model\Context\ModelFieldContext;
 use IgorRain\CodeGenerator\Model\Locator;
 use IgorRain\CodeGenerator\Model\Make\Model as MakeModel;
 use Symfony\Component\Console\Command\Command as ConsoleCommand;

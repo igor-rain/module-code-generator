@@ -224,10 +224,10 @@ class Model
         $schemaGraphQlsFilePath = $context->getGraphQlModule()->getPath() . '/etc/schema.graphqls';
         $this->schemaGraphQlsGenerator->generateSchema($schemaGraphQlsFilePath, $context);
 
-        $modelDataProviderFilePath  = $context->getGraphQlModelDataProvider()->getAbsoluteFilePath();
+        $modelDataProviderFilePath = $context->getGraphQlModelDataProvider()->getAbsoluteFilePath();
         $this->modelDataProviderGenerator->generate($modelDataProviderFilePath, $context);
 
-        $modelResolverFilePath  = $context->getGraphQlModelResolver()->getAbsoluteFilePath();
+        $modelResolverFilePath = $context->getGraphQlModelResolver()->getAbsoluteFilePath();
         $this->modelResolverGenerator->generate($modelResolverFilePath, $context);
     }
 }
