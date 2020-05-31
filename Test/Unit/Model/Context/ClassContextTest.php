@@ -10,8 +10,7 @@ use IgorRain\CodeGenerator\Model\Context\ClassContext;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Context\ClassContext
  */
 class ClassContextTest extends TestCase
 {
@@ -52,13 +51,31 @@ class ClassContextTest extends TestCase
         $this->assertEquals('Vendor1\Module1Api\Test\Api\Api\Menu\ItemRepositoryInterfaceTest', self::createContext()->getApiFunctionalTest()->getName());
     }
 
-    public function testGetMagentoServiceName(): void
+    /**
+     * @param string $serviceName
+     * @param string $className
+     * @testWith ["vendor1Module1ApiMenuItemRepositoryV1","Vendor1\\Module1Api\\Api\\Menu\\ItemRepositoryInterface"]
+     *           ["catalogProductRepositoryV1","Magento\\Catalog\\Api\\Catalog\\ProductRepositoryInterface"]
+     */
+    public function testGetMagentoServiceName(string $serviceName, string $className): void
     {
-        $this->assertEquals('vendor1Module1ApiMenuItemRepositoryV1', self::createContext()->getMagentoServiceName());
+        $this->assertEquals($serviceName, self::createContextWithClassName($className)->getMagentoServiceName());
+    }
+
+    public function testCreate(): void
+    {
+        $module = ModuleContextTest::createApiContext();
+        $context = ClassContext::create($module, 'Api\\Menu\\ItemRepositoryInterface');
+        $this->assertEquals(self::CLASS_NAME, $context->getName());
     }
 
     public static function createContext(): ClassContext
     {
-        return new ClassContext(ModuleContextTest::createApiContext(), self::CLASS_NAME);
+        return self::createContextWithClassName(self::CLASS_NAME);
+    }
+
+    public static function createContextWithClassName(string $className): ClassContext
+    {
+        return new ClassContext(ModuleContextTest::createApiContext(), $className);
     }
 }

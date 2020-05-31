@@ -27,12 +27,17 @@ class ModelFieldContext
      * @var bool
      */
     private $isPrimary;
+    /**
+     * @var bool
+     */
+    private $isIdentifier;
 
-    public function __construct(string $name, string $type, bool $isPrimary)
+    public function __construct(string $name, string $type, bool $isPrimary, bool $isIdentifier)
     {
         $this->name = $name;
         $this->type = $type;
         $this->isPrimary = $isPrimary;
+        $this->isIdentifier = $isIdentifier;
     }
 
     public function getName(): string
@@ -48,6 +53,11 @@ class ModelFieldContext
     public function isPrimary(): bool
     {
         return $this->isPrimary;
+    }
+
+    public function isIdentifier(): bool
+    {
+        return $this->isIdentifier;
     }
 
     public function getConstantName(): string

@@ -7,49 +7,49 @@
 namespace IgorRain\CodeGenerator\Test\Unit\Model\ResourceModel\Source;
 
 use IgorRain\CodeGenerator\Model\ResourceModel\Source\JsonSource;
+use IgorRain\CodeGenerator\Model\ResourceModel\Source\PhpSource;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\ResourceModel\Source\JsonSource
  */
 class JsonSourceTest extends TestCase
 {
-    public function testLoadMissingFile(): void
+    /**
+     * @var string
+     */
+    private $fileName;
+    /**
+     * @var PhpSource
+     */
+    private $source;
+
+    public function setUp(): void
     {
-        $this->expectException('RuntimeException');
-        $jsonSource = new JsonSource('/tmp/missing-file');
-        $jsonSource->load();
+        $this->fileName = tempnam(sys_get_temp_dir(), 'test');
+        $this->source = new JsonSource($this->fileName);
+    }
+
+    public function tearDown(): void
+    {
+        if (file_exists($this->fileName)) {
+            unlink($this->fileName);
+        }
     }
 
     public function testLoadSave(): void
     {
-        $fileName = $this->getTmpFileName();
-        file_put_contents($fileName, $this->getSampleJson());
-
-        $jsonSource = new JsonSource($fileName);
-        $jsonSource->load();
-        $jsonSource->save();
-
-        $this->assertEquals($this->getSampleJson(), file_get_contents($fileName));
-        unlink($fileName);
+        file_put_contents($this->fileName, $this->getSampleJson());
+        $this->source->load();
+        $this->source->save();
+        $this->assertEquals($this->getSampleJson(), file_get_contents($this->fileName));
     }
 
     public function testMergeSave(): void
     {
-        $fileName = $this->getTmpFileName();
-
-        $jsonSource = new JsonSource($fileName);
-        $jsonSource->merge(json_decode($this->getSampleJson(), true));
-        $jsonSource->save();
-
-        $this->assertEquals($this->getSampleJson(), file_get_contents($fileName));
-        unlink($fileName);
-    }
-
-    protected function getTmpFileName()
-    {
-        return tempnam(sys_get_temp_dir(), 'test');
+        $this->source->merge(json_decode($this->getSampleJson(), true));
+        $this->source->save();
+        $this->assertEquals($this->getSampleJson(), file_get_contents($this->fileName));
     }
 
     protected function getSampleJson(): string

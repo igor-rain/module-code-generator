@@ -39,7 +39,7 @@ class RepositoryApiFunctionalTestGenerator
             '{shortRepositoryInterface}' => $context->getRepositoryInterface()->getShortName(),
             '{variable}' => $context->getVariableName(),
             '{modelDataFixture}' => $context->getFixtureRelativePath('Integration', $context->getEventObjectName()),
-            '{primaryKey}' => $context->getPrimaryKey()->getName(),
+            '{primaryKey}' => $context->getPrimaryField()->getName(),
             '{serviceName}' => $context->getRepositoryInterface()->getMagentoServiceName()
         ]);
     }

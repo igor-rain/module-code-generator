@@ -22,6 +22,10 @@ class ModelFieldContextBuilder
      * @var bool
      */
     private $isPrimary;
+    /**
+     * @var bool
+     */
+    private $isIdentifier;
 
     public function __construct()
     {
@@ -64,11 +68,18 @@ class ModelFieldContextBuilder
         return $this;
     }
 
+    public function setIsIdentifier(bool $isIdentifier): self
+    {
+        $this->isIdentifier = $isIdentifier;
+        return $this;
+    }
+
     public function clear(): self
     {
         $this->name = null;
         $this->type = 'string';
         $this->isPrimary = false;
+        $this->isIdentifier = false;
         return $this;
     }
 
@@ -77,7 +88,8 @@ class ModelFieldContextBuilder
         $context = new ModelFieldContext(
             $this->getName(),
             $this->type,
-            $this->isPrimary
+            $this->isPrimary,
+            $this->isIdentifier
         );
 
         $this->clear();

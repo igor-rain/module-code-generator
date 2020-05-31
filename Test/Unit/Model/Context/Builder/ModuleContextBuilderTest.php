@@ -8,11 +8,11 @@ namespace IgorRain\CodeGenerator\Test\Unit\Model\Context;
 
 use IgorRain\CodeGenerator\Model\Context\Builder\ModuleContextBuilder;
 use IgorRain\CodeGenerator\Model\Locator;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Context\Builder\ModuleContextBuilder
  */
 class ModuleContextBuilderTest extends TestCase
 {
@@ -20,11 +20,15 @@ class ModuleContextBuilderTest extends TestCase
      * @var ModuleContextBuilder
      */
     private $builder;
+    /**
+     * @var MockObject|Locator
+     */
+    private $locator;
 
     public function setUp(): void
     {
-        $locator = $this->createMock(Locator::class);
-        $this->builder = new ModuleContextBuilder($locator);
+        $this->locator = $this->createMock(Locator::class);
+        $this->builder = new ModuleContextBuilder($this->locator);
     }
 
     public function testBuild(): void
@@ -75,6 +79,56 @@ class ModuleContextBuilderTest extends TestCase
     {
         $this->expectExceptionMessage('Module path is empty');
         $this->builder->setPath('');
+    }
+
+    public function testSetPathAsNew(): void
+    {
+        $this->locator
+            ->expects($this->once())
+            ->method('getNewModulePath')
+            ->with('Vendor1_Module1')
+            ->willReturn('/test/aaa');
+        $this->builder->setName('Vendor1_Module1');
+        $this->builder->setPathAsNew();
+        $this->assertEquals('/test/aaa', $this->builder->getPath());
+    }
+
+    public function testSetPathAsNewEmpty(): void
+    {
+        $this->expectExceptionMessage('New module path is empty');
+
+        $this->locator
+            ->expects($this->once())
+            ->method('getNewModulePath')
+            ->with('Vendor1_Module1')
+            ->willReturn('');
+        $this->builder->setName('Vendor1_Module1');
+        $this->builder->setPathAsNew();
+    }
+
+    public function testSetPathAsExisting(): void
+    {
+        $this->locator
+            ->expects($this->once())
+            ->method('getExistingModulePath')
+            ->with('Vendor1_Module1')
+            ->willReturn('/test/aaa');
+        $this->builder->setName('Vendor1_Module1');
+        $this->builder->setPathAsExisting();
+        $this->assertEquals('/test/aaa', $this->builder->getPath());
+    }
+
+    public function testSetPathAsExistingEmpty(): void
+    {
+        $this->expectExceptionMessage('Module Vendor1_Module1 was\'t found');
+
+        $this->locator
+            ->expects($this->once())
+            ->method('getExistingModulePath')
+            ->with('Vendor1_Module1')
+            ->willReturn('');
+        $this->builder->setName('Vendor1_Module1');
+        $this->builder->setPathAsExisting();
     }
 
     public function testClear(): void

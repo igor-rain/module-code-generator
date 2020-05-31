@@ -14,8 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Generator\ComposerJsonGenerator
  */
 class ComposerJsonGeneratorTest extends TestCase
 {
@@ -67,10 +66,6 @@ class ComposerJsonGeneratorTest extends TestCase
         "vendor1/module-module3": "~0.0.1"
     },
     "type": "magento2-module",
-    "license": [
-        "OSL-3.0",
-        "AFL-3.0"
-    ],
     "autoload": {
         "files": [
             "registration.php"

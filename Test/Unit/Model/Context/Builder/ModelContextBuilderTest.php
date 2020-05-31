@@ -10,8 +10,7 @@ use IgorRain\CodeGenerator\Model\Context\Builder\ModelContextBuilder;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Context\Builder\ModelContextBuilder
  */
 class ModelContextBuilderTest extends TestCase
 {
@@ -55,6 +54,23 @@ class ModelContextBuilderTest extends TestCase
         $this->builder->build();
     }
 
+    public function testBuildWithoutTableName(): void
+    {
+        $this->expectExceptionMessage('Table name is not set');
+        $this->builder
+            ->setName(ModelContextTest::MODEL_NAME)
+            ->build();
+    }
+
+    public function testBuildWithoutModule(): void
+    {
+        $this->expectExceptionMessage('Module is not set');
+        $this->builder
+            ->setName(ModelContextTest::MODEL_NAME)
+            ->setTableName(ModelContextTest::TABLE_NAME)
+            ->build();
+    }
+
     public function testSetNameUsingEmptyName(): void
     {
         $this->expectExceptionMessage('Model name is empty');
@@ -65,6 +81,12 @@ class ModelContextBuilderTest extends TestCase
     {
         $this->expectExceptionMessage('Invalid model name *');
         $this->builder->setName('*');
+    }
+
+    public function testSetTableUsingEmptyTableName(): void
+    {
+        $this->expectExceptionMessage('Table name is empty');
+        $this->builder->setTableName('');
     }
 
     public function testSetTableUsingInvalidTableName(): void

@@ -12,8 +12,7 @@ use IgorRain\CodeGenerator\Test\Unit\Model\Context\ModelContextTest;
 use IgorRain\CodeGenerator\Test\Unit\Model\Generator\AbstractPhpSourceGeneratorTest;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Generator\Model\ResourceModelGenerator
  */
 class ResourceModelGeneratorTest extends AbstractPhpSourceGeneratorTest
 {

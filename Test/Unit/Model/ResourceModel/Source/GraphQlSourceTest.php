@@ -7,37 +7,48 @@
 namespace IgorRain\CodeGenerator\Test\Unit\Model\ResourceModel\Source;
 
 use IgorRain\CodeGenerator\Model\ResourceModel\Source\GraphQlSource;
+use IgorRain\CodeGenerator\Model\ResourceModel\Source\PhpSource;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\ResourceModel\Source\GraphQlSource
  */
 class GraphQlSourceTest extends TestCase
 {
-    public function testLoadMissingFile(): void
+    /**
+     * @var string
+     */
+    private $fileName;
+    /**
+     * @var PhpSource
+     */
+    private $source;
+
+    public function setUp(): void
     {
-        $this->expectException('RuntimeException');
-        $graphQlSource = new GraphQlSource('/tmp/missing-file');
-        $graphQlSource->load();
+        $this->fileName = tempnam(sys_get_temp_dir(), 'test');
+        $this->source = new GraphQlSource($this->fileName);
+    }
+
+    public function tearDown(): void
+    {
+        if (file_exists($this->fileName)) {
+            unlink($this->fileName);
+        }
     }
 
     public function testLoadSave(): void
     {
-        $fileName = $this->getTmpFileName();
-        file_put_contents($fileName, $this->getSampleGraphQl());
-
-        $graphQlSource = new GraphQlSource($fileName);
-        $graphQlSource->load();
-        $graphQlSource->save();
-
-        $this->assertEquals($this->getSampleGraphQl(), file_get_contents($fileName));
-        unlink($fileName);
+        file_put_contents($this->fileName, $this->getSampleGraphQl());
+        $this->source->load();
+        $this->source->save();
+        $this->assertEquals($this->getSampleGraphQl(), file_get_contents($this->fileName));
     }
 
-    protected function getTmpFileName()
+    public function testSaveEmpty(): void
     {
-        return tempnam(sys_get_temp_dir(), 'test');
+        $this->source->save();
+        $this->assertEquals(PHP_EOL, file_get_contents($this->fileName));
     }
 
     protected function getSampleGraphQl(): string

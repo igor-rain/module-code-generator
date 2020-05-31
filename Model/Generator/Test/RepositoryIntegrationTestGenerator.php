@@ -44,7 +44,7 @@ class RepositoryIntegrationTestGenerator
             '{description}' => $context->getClassDescription(),
             '{descriptionCapital}' => ucfirst($context->getClassDescription()),
             '{modelDataFixture}' => $context->getFixtureRelativePath('Integration', $context->getEventObjectName()),
-            '{primaryKey}' => $context->getPrimaryKey()->getName(),
+            '{primaryKey}' => $context->getPrimaryField()->getName(),
         ]);
     }
 

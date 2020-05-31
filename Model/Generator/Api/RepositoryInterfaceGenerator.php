@@ -55,12 +55,12 @@ class RepositoryInterfaceGenerator
 
         $getByIdMethod = $factory->method('getById')
             ->makePublic()
-            ->addParam($factory->param($context->getVariableName() . 'Id')->setType(new Node\Name($context->getPrimaryKey()->getPhpType())))
+            ->addParam($factory->param($context->getVariableName() . 'Id')->setType(new Node\Name($context->getPrimaryField()->getPhpType())))
             ->setReturnType($context->getModelInterface()->getShortName())
             ->setDocComment('/**
                     * Get ' . $context->getClassDescription() . ' by id
                     *
-                    * @param ' . $context->getPrimaryKey()->getPhpType() . ' $' . $context->getVariableName() . 'Id
+                    * @param ' . $context->getPrimaryField()->getPhpType() . ' $' . $context->getVariableName() . 'Id
                     * @return \\' . $context->getModelInterface()->getName() . '
                     * @throws \Magento\Framework\Exception\NoSuchEntityException
                     */');
@@ -79,12 +79,12 @@ class RepositoryInterfaceGenerator
 
         $deleteByIdMethod = $factory->method('deleteById')
             ->makePublic()
-            ->addParam($factory->param($context->getVariableName() . 'Id')->setType(new Node\Name($context->getPrimaryKey()->getPhpType())))
+            ->addParam($factory->param($context->getVariableName() . 'Id')->setType(new Node\Name($context->getPrimaryField()->getPhpType())))
             ->setReturnType('void')
             ->setDocComment('/**
                     * Delete ' . $context->getClassDescription() . ' by id
                     *
-                    * @param ' . $context->getPrimaryKey()->getPhpType() . ' $' . $context->getVariableName() . 'Id
+                    * @param ' . $context->getPrimaryField()->getPhpType() . ' $' . $context->getVariableName() . 'Id
                     * @return void
                     * @throws \Magento\Framework\Exception\NoSuchEntityException
                     * @throws \Magento\Framework\Exception\CouldNotDeleteException

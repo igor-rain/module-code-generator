@@ -12,7 +12,7 @@ use IgorRain\CodeGenerator\Test\Unit\Model\Context\ModuleContextTest;
 
 /**
  * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Generator\RegistrationPhpGenerator
  */
 class RegistrationPhpGeneratorTest extends AbstractTextSourceGeneratorTest
 {

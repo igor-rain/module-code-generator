@@ -11,8 +11,7 @@ use IgorRain\CodeGenerator\Model\Context\ModelFieldContext;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Context\ModelContext
  */
 class ModelContextTest extends TestCase
 {
@@ -44,9 +43,27 @@ class ModelContextTest extends TestCase
         $this->assertEquals('Menu Item Table', self::createContext()->getTableDescription());
     }
 
-    public function testGetPrimaryKey(): void
+    public function testGetPrimaryField(): void
     {
-        $this->assertEquals('entity_id', self::createContext()->getPrimaryKey()->getName());
+        $this->assertEquals('entity_id', self::createContext()->getPrimaryField()->getName());
+    }
+
+    public function testGetPrimaryFieldMissing(): void
+    {
+        $this->expectExceptionMessage('Primary key is missing');
+        self::createContextWithFields([])->getPrimaryField();
+    }
+
+    public function testGetIdentifierField(): void
+    {
+        $this->assertEquals('sku', self::createContext()->getIdentifierField()->getName());
+    }
+
+    public function testGetIdentifierFieldMissing(): void
+    {
+        $this->assertEquals('entity_id', self::createContextWithFields([
+            new ModelFieldContext('entity_id', 'int', true, false),
+        ])->getIdentifierField()->getName());
     }
 
     public function testGetFields(): void
@@ -162,21 +179,26 @@ class ModelContextTest extends TestCase
      */
     public static function createContext(): ModelContext
     {
+        return self::createContextWithFields([
+            new ModelFieldContext('entity_id', 'int', true, false),
+            new ModelFieldContext('sku', 'string', false, true),
+            new ModelFieldContext('name', 'string', false, false),
+            new ModelFieldContext('description', 'text', false, false),
+            new ModelFieldContext('price', 'float', false, false),
+            new ModelFieldContext('attribute_set_id', 'int', false, false),
+            new ModelFieldContext('is_visible', 'bool', false, false),
+        ]);
+    }
+
+    public static function createContextWithFields(array $fields): ModelContext
+    {
         return new ModelContext(
             ModuleContextTest::createContext(),
             ModuleContextTest::createApiContext(),
             ModuleContextTest::createGraphQlContext(),
             self::MODEL_NAME,
             self::TABLE_NAME,
-            [
-                new ModelFieldContext('entity_id', 'int', true),
-                new ModelFieldContext('sku', 'string', false),
-                new ModelFieldContext('name', 'string', false),
-                new ModelFieldContext('description', 'text', false),
-                new ModelFieldContext('price', 'float', false),
-                new ModelFieldContext('attribute_set_id', 'int', false),
-                new ModelFieldContext('is_visible', 'bool', false),
-            ]
+            $fields
         );
     }
 }

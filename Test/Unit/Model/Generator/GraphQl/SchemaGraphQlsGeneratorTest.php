@@ -14,8 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Generator\GraphQl\SchemaGraphQlsGenerator
  */
 class SchemaGraphQlsGeneratorTest extends TestCase
 {

@@ -39,10 +39,6 @@ class ComposerJsonGenerator
                 'php' => '~7.1.3||~7.2.0||~7.3.0',
             ],
             'type' => 'magento2-module',
-            'license' => [
-                'OSL-3.0',
-                'AFL-3.0',
-            ],
             'autoload' => [
                 'files' => [
                     'registration.php',

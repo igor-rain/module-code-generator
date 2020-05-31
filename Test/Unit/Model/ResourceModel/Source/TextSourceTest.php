@@ -10,38 +10,52 @@ use IgorRain\CodeGenerator\Model\ResourceModel\Source\TextSource;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\ResourceModel\Source\TextSource
  */
 class TextSourceTest extends TestCase
 {
+    /**
+     * @var string
+     */
+    private $fileName;
+    /**
+     * @var TextSource
+     */
+    private $source;
+
+    public function setUp(): void
+    {
+        $this->fileName = tempnam(sys_get_temp_dir(), 'test');
+        $this->source = new TextSource($this->fileName);
+    }
+
+    public function tearDown(): void
+    {
+        if (file_exists($this->fileName)) {
+            unlink($this->fileName);
+        }
+    }
+
+    public function testLoadExistingFileGetContent(): void
+    {
+        file_put_contents($this->fileName, $this->getSampleText());
+        $this->source->load();
+        $this->assertEquals($this->getSampleText(), $this->source->getContent());
+    }
+
     public function testSetContentSave(): void
     {
-        $fileName = $this->getTmpFileName();
-        $textSource = new TextSource($fileName);
-        $textSource->setContent($this->getSampleText());
-        $textSource->save();
-
-        $this->assertEquals($this->getSampleText(), file_get_contents($fileName));
-        unlink($fileName);
+        $this->source->setContent($this->getSampleText());
+        $this->source->save();
+        $this->assertEquals($this->getSampleText(), file_get_contents($this->fileName));
     }
 
     public function testLoadSave(): void
     {
-        $fileName = $this->getTmpFileName();
-        file_put_contents($fileName, $this->getSampleText());
-
-        $textSource = new TextSource($fileName);
-        $textSource->load();
-        $textSource->save();
-
-        $this->assertEquals($this->getSampleText(), file_get_contents($fileName));
-        unlink($fileName);
-    }
-
-    protected function getTmpFileName()
-    {
-        return tempnam(sys_get_temp_dir(), 'test');
+        file_put_contents($this->fileName, $this->getSampleText());
+        $this->source->load();
+        $this->source->save();
+        $this->assertEquals($this->getSampleText(), file_get_contents($this->fileName));
     }
 
     protected function getSampleText(): string

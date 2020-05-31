@@ -6,38 +6,50 @@
 
 namespace IgorRain\CodeGenerator\Test\Unit\Model\ResourceModel\Source;
 
+use IgorRain\CodeGenerator\Model\ResourceModel\Source\PhpSource;
 use IgorRain\CodeGenerator\Model\ResourceModel\Source\XmlSource;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\ResourceModel\Source\XmlSource
  */
 class XmlSourceTest extends TestCase
 {
-    public function testLoadMissingFile(): void
+    /**
+     * @var string
+     */
+    private $fileName;
+    /**
+     * @var PhpSource
+     */
+    private $source;
+
+    public function setUp(): void
     {
-        $this->expectException('RuntimeException');
-        $xmlSource = new XmlSource('/tmp/missing-file');
-        $xmlSource->load();
+        $this->fileName = tempnam(sys_get_temp_dir(), 'test');
+        $this->source = new XmlSource($this->fileName);
+    }
+
+    public function tearDown(): void
+    {
+        if (file_exists($this->fileName)) {
+            unlink($this->fileName);
+        }
     }
 
     public function testLoadSave(): void
     {
-        $fileName = $this->getTmpFileName();
-        file_put_contents($fileName, $this->getSampleXml());
-
-        $xmlSource = new XmlSource($fileName);
-        $xmlSource->load();
-        $xmlSource->save();
-
-        $this->assertEquals($this->getSampleXml(), file_get_contents($fileName));
-        unlink($fileName);
+        file_put_contents($this->fileName, $this->getSampleXml());
+        $this->source->load();
+        $this->source->save();
+        $this->assertEquals($this->getSampleXml(), file_get_contents($this->fileName));
     }
 
-    protected function getTmpFileName()
+    public function testGetDocument(): void
     {
-        return tempnam(sys_get_temp_dir(), 'test');
+        file_put_contents($this->fileName, $this->getSampleXml());
+        $this->source->load();
+        $this->assertEquals(4, $this->source->getDocument()->getElementsByTagName('module')->length);
     }
 
     protected function getSampleXml(): string

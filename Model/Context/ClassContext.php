@@ -6,6 +6,9 @@
 
 namespace IgorRain\CodeGenerator\Model\Context;
 
+use Magento\Framework\App\ObjectManager;
+use Magento\Webapi\Model\ServiceMetadata;
+
 class ClassContext
 {
     /**
@@ -16,6 +19,10 @@ class ClassContext
      * @var string
      */
     private $className;
+    /**
+     * @var array
+     */
+    private static $classCache = [];
 
     public function __construct(ModuleContext $module, string $className)
     {
@@ -92,46 +99,19 @@ class ClassContext
 
     public function getMagentoServiceName(): string
     {
-        $version = 'V1';
-        $preserveVersion = true;
+        $objectManager = ObjectManager::getInstance();
+        /** @var ServiceMetadata $serviceMetadata */
+        $serviceMetadata = $objectManager->get(ServiceMetadata::class);
+        return $serviceMetadata->getServiceName($this->className, 'V1', true);
+    }
 
-        if (!preg_match('/^(.+?)\\\\(.+?)\\\\Service\\\\(V\d+)+(\\\\.+)Interface$/', $this->className, $matches)) {
-            $apiClassPattern = "#^(.+?)\\\\(.+?)\\\\Api\\\\(.+?)(Interface)?$#";
-            preg_match($apiClassPattern, $this->className, $matches);
+    public static function create(ModuleContext $module, string $relativeClassName): ClassContext
+    {
+        $className = str_replace('_', '\\', $module->getName()) . '\\' . $relativeClassName;
+        if (!isset(self::$classCache[$className])) {
+            self::$classCache[$className] = new ClassContext($module, $className);
         }
 
-        if (!empty($matches)) {
-            [, $moduleNamespace, $moduleName] = $matches;
-            $moduleNamespace = ($moduleNamespace === 'Magento') ? '' : $moduleNamespace;
-            if ($matches[4] === 'Interface') {
-                $matches[4] = $matches[3];
-            }
-            $serviceNameParts = explode('\\', trim($matches[4], '\\'));
-            if ($moduleName === $serviceNameParts[0]) {
-                /** Avoid duplication of words in service name */
-                $moduleName = '';
-            }
-            $parentServiceName = $moduleNamespace . $moduleName . array_shift($serviceNameParts);
-            array_unshift($serviceNameParts, $parentServiceName);
-            if ($preserveVersion) {
-                $serviceNameParts[] = $version;
-            }
-        } elseif (preg_match('/^(.+?)\\\\(.+?)\\\\Api(\\\\.+)Interface$/', $this->className, $matches)) {
-            [, $moduleNamespace, $moduleName] = $matches;
-            $moduleNamespace = ($moduleNamespace === 'Magento') ? '' : $moduleNamespace;
-            $serviceNameParts = explode('\\', trim($matches[3], '\\'));
-            if ($moduleName === $serviceNameParts[0]) {
-                /** Avoid duplication of words in service name */
-                $moduleName = '';
-            }
-            $parentServiceName = $moduleNamespace . $moduleName . array_shift($serviceNameParts);
-            array_unshift($serviceNameParts, $parentServiceName);
-            if ($preserveVersion) {
-                $serviceNameParts[] = $version;
-            }
-        } else {
-            throw new \InvalidArgumentException(sprintf('The service interface name "%s" is invalid.', $this->className));
-        }
-        return lcfirst(implode('', $serviceNameParts));
+        return self::$classCache[$className];
     }
 }

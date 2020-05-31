@@ -52,7 +52,7 @@ class SchemaGraphQlsGenerator
         $queryField = $this->findFieldByName($queryFields, $objectName);
         if (!$queryField) {
             $queryField = $this->createField($objectName, $objectType, [
-                $this->creatFieldArgument('id', $context->getPrimaryKey()->getGraphQlType(), [
+                $this->creatFieldArgument('id', $context->getPrimaryField()->getGraphQlType(), [
                     $this->createDirective('doc', 'description', ucfirst($context->getClassDescription()) . ' id')
                 ])
             ], [

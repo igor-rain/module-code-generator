@@ -60,7 +60,7 @@ class ResourceModelGenerator
             ->addStmt(
                 new Node\Expr\MethodCall(new Node\Expr\Variable('this'), '_init', [
                     new Node\Arg(new Node\Scalar\String_($context->getTableName())),
-                    new Node\Arg(new Node\Scalar\String_($context->getPrimaryKey()->getName())),
+                    new Node\Arg(new Node\Scalar\String_($context->getPrimaryField()->getName())),
                 ])
             );
 

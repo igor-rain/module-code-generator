@@ -58,7 +58,16 @@ class ModuleContext
 
     public function getComposerPackage(): string
     {
-        return strtolower(str_replace('_', '/module', preg_replace('/(?<!^)[A-Z]+/', '-$0', $this->name)));
+        return strtolower(
+            trim(
+                str_replace(
+                    '_',
+                    '/module',
+                    preg_replace('/([A-Z]+)/', '-$0', $this->name)
+                ),
+                '-'
+            )
+        );
     }
 
     public function getPsr4Prefix(): string

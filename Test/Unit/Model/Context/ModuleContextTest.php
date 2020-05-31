@@ -10,8 +10,7 @@ use IgorRain\CodeGenerator\Model\Context\ModuleContext;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Context\ModuleContext
  */
 class ModuleContextTest extends TestCase
 {
@@ -58,6 +57,7 @@ class ModuleContextTest extends TestCase
         $this->assertEquals('vendor1/module-module1', self::createContext()->getComposerPackage());
         $this->assertEquals('vendor1/module-module1-api', self::createApiContext()->getComposerPackage());
         $this->assertEquals('abc-def/module-abc3', self::createContextWithName('AbcDef_ABC3')->getComposerPackage());
+        $this->assertEquals('abc/module-te-st', self::createContextWithName('ABC_TeSt')->getComposerPackage());
     }
 
     public function testGetPsr4Prefix(): void

@@ -12,8 +12,7 @@ use IgorRain\CodeGenerator\Test\Unit\Model\Context\ModelContextTest;
 use IgorRain\CodeGenerator\Test\Unit\Model\Generator\AbstractTextSourceGeneratorTest;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Generator\Test\ModelIntegrationTestFixtureGenerator
  */
 class ModelIntegrationTestFixtureGeneratorTest extends AbstractTextSourceGeneratorTest
 {

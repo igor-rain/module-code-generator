@@ -13,9 +13,8 @@ class SourceFactory
      */
     private $sources;
 
-    public function __construct(
-        $sources = []
-    ) {
+    public function __construct($sources = [])
+    {
         $this->sources = $sources;
     }
 

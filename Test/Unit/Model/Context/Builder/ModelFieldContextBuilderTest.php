@@ -10,8 +10,7 @@ use IgorRain\CodeGenerator\Model\Context\Builder\ModelFieldContextBuilder;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Context\Builder\ModelFieldContextBuilder
  */
 class ModelFieldContextBuilderTest extends TestCase
 {
@@ -31,11 +30,13 @@ class ModelFieldContextBuilderTest extends TestCase
             ->setName(ModelFieldContextTest::FIELD_NAME)
             ->setType(ModelFieldContextTest::FIELD_TYPE)
             ->setIsPrimary(ModelFieldContextTest::IS_PRIMARY)
+            ->setIsIdentifier(ModelFieldContextTest::IS_IDENTIFIER)
             ->build();
 
         $this->assertEquals(ModelFieldContextTest::FIELD_NAME, $context->getName());
         $this->assertEquals(ModelFieldContextTest::FIELD_TYPE, $context->getType());
         $this->assertEquals(ModelFieldContextTest::IS_PRIMARY, $context->isPrimary());
+        $this->assertEquals(ModelFieldContextTest::IS_IDENTIFIER, $context->isIdentifier());
     }
 
     public function testBuildWithoutName(): void
@@ -69,6 +70,7 @@ class ModelFieldContextBuilderTest extends TestCase
             ->setName(ModelFieldContextTest::FIELD_NAME)
             ->setType(ModelFieldContextTest::FIELD_TYPE)
             ->setIsPrimary(ModelFieldContextTest::IS_PRIMARY)
+            ->setIsIdentifier(ModelFieldContextTest::IS_IDENTIFIER)
             ->clear()
             ->build();
     }

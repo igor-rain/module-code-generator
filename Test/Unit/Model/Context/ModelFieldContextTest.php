@@ -10,14 +10,14 @@ use IgorRain\CodeGenerator\Model\Context\ModelFieldContext;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @internal
- * @coversNothing
+ * @covers \IgorRain\CodeGenerator\Model\Context\ModelFieldContext
  */
 class ModelFieldContextTest extends TestCase
 {
     public const FIELD_NAME = 'attribute_set_id';
     public const FIELD_TYPE = 'string';
     public const IS_PRIMARY = false;
+    public const IS_IDENTIFIER = false;
 
     public function testGetName(): void
     {
@@ -32,6 +32,11 @@ class ModelFieldContextTest extends TestCase
     public function testIsPrimary(): void
     {
         $this->assertEquals(self::IS_PRIMARY, self::createContext()->isPrimary());
+    }
+
+    public function testIsIdentifier(): void
+    {
+        $this->assertEquals(self::IS_IDENTIFIER, self::createContext()->isIdentifier());
     }
 
     public function testGetConstantName(): void
@@ -82,7 +87,8 @@ class ModelFieldContextTest extends TestCase
         $context = new ModelFieldContext(
             self::FIELD_NAME,
             $type,
-            self::IS_PRIMARY
+            self::IS_PRIMARY,
+            self::IS_IDENTIFIER
         );
         $this->assertEquals($phpType, $context->getPhpType());
     }
@@ -108,7 +114,8 @@ class ModelFieldContextTest extends TestCase
         $context = new ModelFieldContext(
             self::FIELD_NAME,
             $type,
-            self::IS_PRIMARY
+            self::IS_PRIMARY,
+            self::IS_IDENTIFIER
         );
         $this->assertEquals($graphQlType, $context->getGraphQlType());
     }
@@ -118,7 +125,8 @@ class ModelFieldContextTest extends TestCase
         return new ModelFieldContext(
             self::FIELD_NAME,
             self::FIELD_TYPE,
-            self::IS_PRIMARY
+            self::IS_PRIMARY,
+            self::IS_IDENTIFIER
         );
     }
 }

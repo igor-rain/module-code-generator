@@ -129,7 +129,7 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
             $table->appendChild($constraint);
 
             $column = $table->ownerDocument->createElement('column');
-            $column->setAttribute('name', $context->getPrimaryKey()->getName());
+            $column->setAttribute('name', $context->getPrimaryField()->getName());
             $constraint->appendChild($column);
         }
 

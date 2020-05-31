@@ -35,11 +35,11 @@ class ModelContext
     /**
      * @var ModelFieldContext|null
      */
-    private $primaryKey;
+    private $primaryField;
     /**
-     * @var array
+     * @var ModelFieldContext|null
      */
-    private $classCache = [];
+    private $identifierField;
 
     public function __construct(
         ModuleContext $module,
@@ -85,20 +85,36 @@ class ModelContext
         ])) . ' Table';
     }
 
-    public function getPrimaryKey(): ModelFieldContext
+    public function getPrimaryField(): ModelFieldContext
     {
-        if ($this->primaryKey === null) {
+        if ($this->primaryField === null) {
             foreach ($this->fields as $field) {
                 if ($field->isPrimary()) {
-                    $this->primaryKey = $field;
+                    $this->primaryField = $field;
                     break;
                 }
             }
-            if (!$this->primaryKey) {
+            if (!$this->primaryField) {
                 throw new \RuntimeException('Primary key is missing');
             }
         }
-        return $this->primaryKey;
+        return $this->primaryField;
+    }
+
+    public function getIdentifierField(): ModelFieldContext
+    {
+        if ($this->identifierField === null) {
+            foreach ($this->fields as $field) {
+                if ($field->isIdentifier()) {
+                    $this->identifierField = $field;
+                    break;
+                }
+            }
+            if (!$this->identifierField) {
+                $this->identifierField = $this->getPrimaryField();
+            }
+        }
+        return $this->identifierField;
     }
 
     /**
@@ -143,67 +159,67 @@ class ModelContext
 
     public function getModelInterface(): ClassContext
     {
-        return $this->getClassContext($this->apiModule, 'Api\\Data\\'
+        return ClassContext::create($this->apiModule, 'Api\\Data\\'
             . str_replace('/', '\\', $this->name)
             . 'Interface');
     }
 
     public function getModel(): ClassContext
     {
-        return $this->getClassContext($this->module, 'Model\\'
+        return ClassContext::create($this->module, 'Model\\'
             . str_replace('/', '\\', $this->name));
     }
 
     public function getSearchResultsInterface(): ClassContext
     {
-        return $this->getClassContext($this->apiModule, 'Api\\Data\\'
+        return ClassContext::create($this->apiModule, 'Api\\Data\\'
             . str_replace('/', '\\', $this->name)
             . 'SearchResultsInterface');
     }
 
     public function getSearchResults(): ClassContext
     {
-        return $this->getClassContext($this->module, 'Model\\'
+        return ClassContext::create($this->module, 'Model\\'
             . str_replace('/', '\\', $this->name)
             . 'SearchResults');
     }
 
     public function getRepositoryInterface(): ClassContext
     {
-        return $this->getClassContext($this->apiModule, 'Api\\'
+        return ClassContext::create($this->apiModule, 'Api\\'
             . str_replace('/', '\\', $this->name)
             . 'RepositoryInterface');
     }
 
     public function getRepository(): ClassContext
     {
-        return $this->getClassContext($this->module, 'Model\\'
+        return ClassContext::create($this->module, 'Model\\'
             . str_replace('/', '\\', $this->name)
             . 'Repository');
     }
 
     public function getResourceModel(): ClassContext
     {
-        return $this->getClassContext($this->module, 'Model\\ResourceModel\\'
+        return ClassContext::create($this->module, 'Model\\ResourceModel\\'
             . str_replace('/', '\\', $this->name));
     }
 
     public function getCollection(): ClassContext
     {
-        return $this->getClassContext($this->module, 'Model\\ResourceModel\\'
+        return ClassContext::create($this->module, 'Model\\ResourceModel\\'
             . str_replace('/', '\\', $this->name)
             . '\\Collection');
     }
 
     public function getGraphQlModelResolver(): ClassContext
     {
-        return $this->getClassContext($this->graphQlModule, 'Model\Resolver\\'
+        return ClassContext::create($this->graphQlModule, 'Model\Resolver\\'
             . str_replace('/', '\\', $this->name));
     }
 
     public function getGraphQlModelDataProvider(): ClassContext
     {
-        return $this->getClassContext($this->graphQlModule, 'Model\Resolver\DataProvider\\'
+        return ClassContext::create($this->graphQlModule, 'Model\Resolver\DataProvider\\'
             . str_replace('/', '\\', $this->name));
     }
 
@@ -215,15 +231,5 @@ class ModelContext
     public function getFixtureRelativePath($testType, $name): string
     {
         return '../../../../app/code/' . str_replace('_', '/', $this->module->getName()) . '/Test/' . $testType . '/_files/' . $name . '.php';
-    }
-
-    private function getClassContext(ModuleContext $module, string $relativeClassName): ClassContext
-    {
-        $className = str_replace('_', '\\', $module->getName()) . '\\' . $relativeClassName;
-        if (!isset($this->classCache[$className])) {
-            $this->classCache[$className] = new ClassContext($module, $className);
-        }
-
-        return $this->classCache[$className];
     }
 }

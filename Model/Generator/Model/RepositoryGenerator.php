@@ -48,7 +48,7 @@ class RepositoryGenerator
             '{variable}' => $context->getVariableName(),
             '{description}' => $context->getClassDescription(),
             '{descriptionCapital}' => ucfirst($context->getClassDescription()),
-            '{primaryKeyPhpType}' => $context->getPrimaryKey()->getPhpType()
+            '{primaryKeyPhpType}' => $context->getPrimaryField()->getPhpType()
         ]);
     }
 

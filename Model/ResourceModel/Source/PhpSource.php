@@ -9,50 +9,12 @@ namespace IgorRain\CodeGenerator\Model\ResourceModel\Source;
 use PhpParser\Node;
 use PhpParser\ParserFactory;
 
-class PhpSource implements SourceInterface
+class PhpSource extends AbstractSource
 {
-    /**
-     * @var string
-     */
-    private $fileName;
     /**
      * @var Node[]
      */
     private $stmts = [];
-
-    public function __construct(
-        $fileName
-    ) {
-        $this->fileName = $fileName;
-    }
-
-    public function exists(): bool
-    {
-        return file_exists($this->fileName);
-    }
-
-    public function load(): void
-    {
-        if (!file_exists($this->fileName)) {
-            throw new \RuntimeException(sprintf('Missing file %s', $this->fileName));
-        }
-
-        $content = file_get_contents($this->fileName);
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-        $this->stmts = $parser->parse($content);
-    }
-
-    public function save(): void
-    {
-        $dir = dirname($this->fileName);
-        if (!is_dir($dir) && !mkdir($dir, 0770, true) && !is_dir($dir)) {
-            throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
-        }
-
-        $prettyPrinter = new PhpSource\PrettyPrinter();
-        $content = $prettyPrinter->prettyPrintFile($this->stmts) . PHP_EOL;
-        file_put_contents($this->fileName, $content);
-    }
 
     /**
      * @return Node[]
@@ -68,5 +30,17 @@ class PhpSource implements SourceInterface
     public function setStmts(array $stmts): void
     {
         $this->stmts = $stmts;
+    }
+
+    protected function getContent(): ?string
+    {
+        $prettyPrinter = new PhpSource\PrettyPrinter();
+        return $prettyPrinter->prettyPrintFile($this->stmts) . PHP_EOL;
+    }
+
+    protected function setContent(string $content): void
+    {
+        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->stmts = $parser->parse($content);
     }
 }
