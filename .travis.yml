@@ -6,29 +6,13 @@ php:
     - 7.2
     - 7.3
 env:
-    global:
-        - COMPOSER_BIN_DIR=~/bin
-        - INTEGRATION_SETS=3
-        - NODE_JS_VERSION=8
-        - MAGENTO_HOST_NAME="magento2.travis"
-        - COMPOSER_MODULE=igor-rain/module-code-generator
-        - TEST_FILTER=vendor/$COMPOSER_MODULE
     matrix:
-        - MAGENTO_VERSION=2.3.5 TEST_SUITE=unit
+        - MAGENTO_VERSION=2.3.5-p1
 cache:
     directories:
         - $HOME/.composer/cache
         - $HOME/.nvm
-before_install:
-    - composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition=$MAGENTO_VERSION magento2
-    - cd magento2
-    - chmod +x ./dev/travis/before_install.sh
-    - ./dev/travis/before_install.sh
 install:
-    - composer config repositories.test_target git ../
-    - composer require $COMPOSER_MODULE dev-$TRAVIS_BRANCH
-before_script:
-    - chmod +x ./dev/travis/before_script.sh
-    - ./dev/travis/before_script.sh
+    - composer require --dev magento/magento2-base:$MAGENTO_VERSION
 script:
-    - phpunit -c dev/tests/$TEST_SUITE $TEST_FILTER;
+    - ./vendor/bin/phpunit  -c dev/tests/unit src/
