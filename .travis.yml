@@ -16,4 +16,4 @@ install:
     - composer global require hirak/prestissimo
     - composer require --dev magento/magento2-base:$MAGENTO_VERSION
 script:
-    - ./vendor/bin/phpunit  -c dev/tests/unit src/
+    - ./vendor/bin/phpunit -c dev/tests/unit

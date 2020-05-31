@@ -7,7 +7,7 @@
          bootstrap="./framework/bootstrap.php"
         >
     <testsuite name="Magento_Unit_Tests_Module">
-        <directory suffix="Test.php">../../../src/Test/Unit</directory>
+        <directory suffix="Test.php">../../../tests/Unit</directory>
     </testsuite>
     <php>
         <ini name="date.timezone" value="America/Los_Angeles"/>
@@ -16,9 +16,6 @@
     <filter>
         <whitelist addUncoveredFilesFromWhiteList="true">
             <directory suffix=".php">../../../src</directory>
-            <exclude>
-                <directory>../../../src/Test</directory>
-            </exclude>
         </whitelist>
     </filter>
     <listeners>

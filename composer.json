@@ -13,7 +13,8 @@
         "friendsofphp/php-cs-fixer": "~2.14.0",
         "magento/magento2-base": "*",
         "magento/framework": "*",
-        "magento/module-webapi": "*"
+        "magento/module-webapi": "*",
+        "colinmollenhour/cache-backend-file": "*"
     },
     "type": "magento2-module",
     "license": [
@@ -25,6 +26,13 @@
         ],
         "psr-4": {
             "IgorRain\\CodeGenerator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Magento\\Setup\\": "setup/src/Magento/Setup/",
+            "Zend\\Mvc\\Controller\\": "setup/src/Zend/Mvc/Controller/",
+            "IgorRain\\CodeGenerator\\Test\\": "tests/"
         }
     },
     "version": "0.0.1",
