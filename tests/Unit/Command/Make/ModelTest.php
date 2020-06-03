@@ -4,7 +4,7 @@
  * See LICENCE for license details.
  */
 
-namespace IgorRain\CodeGenerator\Test\Unit\Model;
+namespace IgorRain\CodeGenerator\Test\Unit\Command\Make;
 
 use IgorRain\CodeGenerator\Command\Make\Model;
 use IgorRain\CodeGenerator\Model\Command\QuestionFactory;

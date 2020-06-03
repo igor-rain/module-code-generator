@@ -36,6 +36,7 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
             $this->getOrCreateColumn($table, $field);
         }
         $this->getOrCreatePrimaryKeyConstraint($table, $context);
+        $this->getOrCreateUniqueKeyConstraint($table, $context);
 
         $source->save();
     }
@@ -130,6 +131,24 @@ class DbSchemaXmlGenerator extends AbstractXmlGenerator
 
             $column = $table->ownerDocument->createElement('column');
             $column->setAttribute('name', $context->getPrimaryField()->getName());
+            $constraint->appendChild($column);
+        }
+
+        return $constraint;
+    }
+
+    protected function getOrCreateUniqueKeyConstraint(DOMElement $table, ModelContext $context): DOMElement
+    {
+        $referenceId = strtoupper($context->getTableName() . '_' . $context->getIdentifierField()->getName());
+        $constraint = $this->findConstraintByReferenceId($table, $referenceId);
+        if (!$constraint) {
+            $constraint = $table->ownerDocument->createElement('constraint');
+            $constraint->setAttribute('xsi:type', 'unique');
+            $constraint->setAttribute('referenceId', $referenceId);
+            $table->appendChild($constraint);
+
+            $column = $table->ownerDocument->createElement('column');
+            $column->setAttribute('name', $context->getIdentifierField()->getName());
             $constraint->appendChild($column);
         }
 

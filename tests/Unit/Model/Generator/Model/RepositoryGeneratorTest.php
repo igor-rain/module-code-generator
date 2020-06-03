@@ -89,6 +89,16 @@ class ItemRepository implements ItemRepositoryInterface
         return $menuItem;
     }
 
+    public function get(string $sku): ItemInterface
+    {
+        $menuItem = $this->itemFactory->create();
+        $this->resource->load($menuItem, $sku, \'sku\');
+        if (!$menuItem->getId()) {
+            throw new NoSuchEntityException(__(\'Menu item with sku "%1" does not exist\', $sku));
+        }
+        return $menuItem;
+    }
+
     public function getById(int $menuItemId): ItemInterface
     {
         $menuItem = $this->itemFactory->create();

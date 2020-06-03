@@ -26,10 +26,19 @@
         }
     },
     "autoload-dev": {
+        "files": [
+            "app/etc/NonComposerComponentRegistration.php"
+        ],
         "psr-4": {
             "Magento\\Setup\\": "setup/src/Magento/Setup/",
             "Zend\\Mvc\\Controller\\": "setup/src/Zend/Mvc/Controller/",
             "IgorRain\\CodeGenerator\\Test\\": "tests/"
+        },
+        "psr-0": {
+            "": [
+                "app/code/",
+                "generated/code/"
+            ]
         }
     },
     "version": "0.0.1",

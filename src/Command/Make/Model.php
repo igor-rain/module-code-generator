@@ -68,10 +68,12 @@ class Model extends Command
         $this->askModelName($input, $output);
         $this->askTableName($input, $output);
 
-        $this->askField($input, $output, 'Primary key', true);
+        $this->askField($input, $output, 'Primary key', true, false);
+
+        $this->askField($input, $output, 'Identifier', false, true);
 
         for ($fieldIndex = 1;; ++$fieldIndex) {
-            if (!$this->askField($input, $output, 'Field #' . $fieldIndex, false)) {
+            if (!$this->askField($input, $output, 'Field #' . $fieldIndex, false, false)) {
                 break;
             }
         }
@@ -129,7 +131,8 @@ class Model extends Command
         InputInterface $input,
         OutputInterface $output,
         string $questionPrefix,
-        bool $isPrimary
+        bool $isPrimary,
+        bool $isIdentifier
     ): bool {
         $helper = $this->getHelper('question');
 
@@ -153,6 +156,7 @@ class Model extends Command
         $helper->ask($input, $output, $fieldTypeQuestion);
 
         $this->modelFieldContextBuilder->setIsPrimary($isPrimary);
+        $this->modelFieldContextBuilder->setIsIdentifier($isIdentifier);
 
         $field = $this->modelFieldContextBuilder->build();
         $this->modelContextBuilder->addField($field);

@@ -48,7 +48,11 @@ class RepositoryGenerator
             '{variable}' => $context->getVariableName(),
             '{description}' => $context->getClassDescription(),
             '{descriptionCapital}' => ucfirst($context->getClassDescription()),
-            '{primaryKeyPhpType}' => $context->getPrimaryField()->getPhpType()
+            '{primaryKeyPhpType}' => $context->getPrimaryField()->getPhpType(),
+            '{identifierPhpType}' => $context->getIdentifierField()->getPhpType(),
+            '{identifierVariable}' => $context->getIdentifierField()->getVariableName(),
+            '{identifierName}' => $context->getIdentifierField()->getName(),
+            '{identifierDescription}' => $context->getIdentifierField()->getDescription()
         ]);
     }
 
@@ -114,6 +118,16 @@ class {shortRepository} implements {shortRepositoryInterface}
             $this->resource->save(${variable});
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(__(\'Could not save {description}: %1\', $exception->getMessage()));
+        }
+        return ${variable};
+    }
+
+    public function get({identifierPhpType} ${identifierVariable}): {shortModelInterface}
+    {
+        ${variable} = $this->{modelFactory}->create();
+        $this->resource->load(${variable}, ${identifierVariable}, \'{identifierName}\');
+        if (!${variable}->getId()) {
+            throw new NoSuchEntityException(__(\'{descriptionCapital} with {identifierDescription} "%1" does not exist\', ${identifierVariable}));
         }
         return ${variable};
     }

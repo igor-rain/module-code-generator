@@ -53,6 +53,18 @@ class RepositoryInterfaceGenerator
                     * @throws \Magento\Framework\Exception\CouldNotSaveException
                     */');
 
+        $getMethod = $factory->method('get')
+            ->makePublic()
+            ->addParam($factory->param($context->getIdentifierField()->getVariableName())->setType(new Node\Name($context->getIdentifierField()->getPhpType())))
+            ->setReturnType($context->getModelInterface()->getShortName())
+            ->setDocComment('/**
+                    * Get ' . $context->getClassDescription() . ' by ' . $context->getIdentifierField()->getDescription() . '
+                    *
+                    * @param ' . $context->getIdentifierField()->getPhpType() . ' $' . $context->getIdentifierField()->getVariableName() . '
+                    * @return \\' . $context->getModelInterface()->getName() . '
+                    * @throws \Magento\Framework\Exception\NoSuchEntityException
+                    */');
+
         $getByIdMethod = $factory->method('getById')
             ->makePublic()
             ->addParam($factory->param($context->getVariableName() . 'Id')->setType(new Node\Name($context->getPrimaryField()->getPhpType())))
@@ -102,6 +114,7 @@ class RepositoryInterfaceGenerator
                     */');
 
         $interface->addStmt($saveMethod);
+        $interface->addStmt($getMethod);
         $interface->addStmt($getByIdMethod);
         $interface->addStmt($deleteMethod);
         $interface->addStmt($deleteByIdMethod);

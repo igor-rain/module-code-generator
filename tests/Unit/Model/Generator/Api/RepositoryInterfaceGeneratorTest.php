@@ -48,6 +48,15 @@ interface ItemRepositoryInterface
     public function save(ItemInterface $menuItem): ItemInterface;
 
     /**
+     * Get menu item by sku
+     *
+     * @param string $sku
+     * @return \Vendor1\Module1Api\Api\Data\Menu\ItemInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function get(string $sku): ItemInterface;
+
+    /**
      * Get menu item by id
      *
      * @param int $menuItemId

@@ -88,6 +88,9 @@ class DbSchemaXmlGeneratorTest extends TestCase
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
+        <constraint xsi:type="unique" referenceId="MENU_ITEM_ENTITY_SKU">
+            <column name="sku"/>
+        </constraint>
     </table>
 </schema>
 ';
@@ -124,6 +127,9 @@ class DbSchemaXmlGeneratorTest extends TestCase
         <column xsi:type="smallint" name="is_visible" padding="5" unsigned="true" nullable="true" comment="Is Visible"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="MENU_ITEM_ENTITY_SKU">
+            <column name="sku"/>
         </constraint>
     </table>
 </schema>

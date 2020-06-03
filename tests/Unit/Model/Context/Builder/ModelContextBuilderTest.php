@@ -4,9 +4,12 @@
  * See LICENCE for license details.
  */
 
-namespace IgorRain\CodeGenerator\Test\Unit\Model\Context;
+namespace IgorRain\CodeGenerator\Test\Unit\Model\Context\Builder;
 
 use IgorRain\CodeGenerator\Model\Context\Builder\ModelContextBuilder;
+use IgorRain\CodeGenerator\Test\Unit\Model\Context\ModelContextTest;
+use IgorRain\CodeGenerator\Test\Unit\Model\Context\ModelFieldContextTest;
+use IgorRain\CodeGenerator\Test\Unit\Model\Context\ModuleContextTest;
 use PHPUnit\Framework\TestCase;
 
 /**
