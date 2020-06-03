@@ -11,10 +11,7 @@
     "require-dev": {
         "phpunit/phpunit": "~6.5.0",
         "friendsofphp/php-cs-fixer": "~2.14.0",
-        "magento/magento2-base": "*",
-        "magento/framework": "*",
-        "magento/module-webapi": "*",
-        "colinmollenhour/cache-backend-file": "*"
+        "magento/product-community-edition": "*"
     },
     "type": "magento2-module",
     "license": [

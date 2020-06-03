@@ -14,6 +14,6 @@ cache:
         - $HOME/.nvm
 install:
     - composer global require hirak/prestissimo
-    - composer require --dev magento/magento2-base:$MAGENTO_VERSION
+    - composer require --dev magento/product-community-edition:$MAGENTO_VERSION
 script:
     - ./vendor/bin/phpunit -c dev/tests/unit
